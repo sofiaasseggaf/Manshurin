@@ -10,6 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Manshurin">
         <activity
+            android:name=".PenjualanKeranjang"
+            android:exported="false" />
+        <activity
+            android:name=".PembelianKeranjang"
+            android:exported="false" />
+        <activity
             android:name=".DataSaldoEdit"
             android:exported="false" />
         <activity
