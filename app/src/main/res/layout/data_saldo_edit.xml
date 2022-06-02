@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_home"
+    tools:context=".DataSaldoEdit">
+
+    <RelativeLayout
+        android:id="@+id/top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:background="@drawable/rect_top3">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/comfortaa_bold"
+            android:text="INPUT DATA SALDO"
+            android:textColor="@color/white"
+            android:textSize="26sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/top"
+        android:layout_margin="20dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_bold"
+            android:textSize="14sp"
+            android:text="ID Saldo"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rect_edittext_noneditable"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:id="@+id/txt_id_saldo"
+                android:layout_width="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:fontFamily="@font/montserrat_bold"
+                android:textSize="14sp"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_bold"
+            android:textSize="14sp"
+            android:layout_marginTop="12dp"
+            android:text="Jenis Saldo"/>
+
+        <EditText
+            android:id="@+id/txt_jenis_saldo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rect_edittext"
+            android:paddingLeft="10dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:textSize="14sp"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_bold"
+            android:textSize="14sp"
+            android:layout_marginTop="12dp"
+            android:text="Nominal Saldo"/>
+
+        <EditText
+            android:id="@+id/txt_nominal_saldo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rect_edittext"
+            android:paddingLeft="10dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:textSize="14sp"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_bold"
+            android:textSize="14sp"
+            android:layout_marginTop="12dp"
+            android:text="Deskripsi Saldo"/>
+
+        <EditText
+            android:id="@+id/txt_deskripsi_saldo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:textSize="14sp"
+            android:lines="3"
+            android:background="@drawable/rect_edittext_2"
+            android:layout_marginTop="10dp"/>
+
+    </LinearLayout>
+
+
+    <ImageButton
+        android:id="@+id/btn_simpan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_simpan"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"/>
+
+    <FrameLayout
+        android:id="@+id/framelayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="@drawable/bg_splashscreen">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/textloading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="100dp"
+                android:fontFamily="@font/comfortaa_bold"
+                android:textSize="22sp"
+                android:textColor="@color/white"/>
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+</RelativeLayout>
