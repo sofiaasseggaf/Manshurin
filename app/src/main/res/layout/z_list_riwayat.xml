@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/rect_list_laporan"
+    android:padding="15dp">
+
+    <TextView
+        android:id="@+id/tgl_pembelian"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="10/06/2022"
+        android:fontFamily="@font/comfortaa_regular"
+        android:textColor="@color/bluetext"
+        android:textSize="12sp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_list_riwayat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/total_pembelian"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TOTAL HARGA :"
+        android:fontFamily="@font/comfortaa_medium"
+        android:textColor="@color/bluetext"
+        android:layout_marginTop="10dp"
+        android:textSize="16sp"/>
+
+
+</LinearLayout>

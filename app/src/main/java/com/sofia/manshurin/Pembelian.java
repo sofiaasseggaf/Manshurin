@@ -135,9 +135,9 @@ public class Pembelian extends AppCompatActivity {
     }
 
     private void masukkkanKeranjang(){
-        //simpan data barang ke table keranjang, kalo done baru gini
+        // simpan data barang ke table keranjang, kalo done baru gini
         // pake int aja utk tau uda berapa kali, kaya int++
-        //nanti pas berhasil transaksi, data di table keranjang apus semua, kaya refresh gituwes
+        // nanti pas berhasil transaksi, data di table keranjang apus semua, kaya refresh gituwes
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
