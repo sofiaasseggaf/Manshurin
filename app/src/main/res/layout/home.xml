@@ -73,6 +73,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
             android:layout_weight="1">
 
             <ImageButton
@@ -107,6 +108,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
             android:layout_weight="1">
             <ImageButton
                 android:id="@+id/btn_penjualan"
@@ -140,6 +142,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
             android:layout_weight="1">
             <ImageButton
                 android:id="@+id/btn_riwayat_penjualan"

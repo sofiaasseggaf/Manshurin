@@ -40,15 +40,23 @@ public class DataHelper extends SQLiteOpenHelper {
         Log.d("Data", "onCreate : " + CREATE_TABLE_SALDO);
         db.execSQL(CREATE_TABLE_SALDO);
 
-        String CREATE_TABLE_KERANJANG = "create table keranjang(id_keranjang integer primary key, id_barang integer null, jumlah integer null, harga text null);";
+        String CREATE_TABLE_PEMBELIAN = "create table pembelian(id_pembelian integer primary key, id_riwayat integer null, id_barang integer null, jumlah integer null, harga text null);";
+        Log.d("Data", "onCreate : " + CREATE_TABLE_PEMBELIAN);
+        db.execSQL(CREATE_TABLE_PEMBELIAN);
+
+        String CREATE_TABLE_PENJUALAN = "create table penjualan(id_penjualan integer primary key, id_riwayat integer null, id_barang integer null, jumlah integer null, harga text null);";
+        Log.d("Data", "onCreate : " + CREATE_TABLE_PENJUALAN);
+        db.execSQL(CREATE_TABLE_PENJUALAN);
+
+        String CREATE_TABLE_KERANJANG = "create table keranjang(id_keranjang integer primary key, id_transaksi integer null);";
         Log.d("Data", "onCreate : " + CREATE_TABLE_KERANJANG);
         db.execSQL(CREATE_TABLE_KERANJANG);
 
-        String CREATE_TABLE_RIWAYAT_PEMBELIAN = "create table riwayatpembelian(id_riwayat integer null, id_barang integer null, jumlah integer null, harga text null, harga_katul text null, jenis_pembayaran text null, tgl_input text null, tgl_update text null );";
+        String CREATE_TABLE_RIWAYAT_PEMBELIAN = "create table riwayatpembelian(id_riwayat integer null, harga text null, harga_katul text null, jenis_pembayaran text null, tgl_input text null, tgl_update text null );";
         Log.d("Data", "onCreate : " + CREATE_TABLE_RIWAYAT_PEMBELIAN);
         db.execSQL(CREATE_TABLE_RIWAYAT_PEMBELIAN);
 
-        String CREATE_TABLE_RIWAYAT_PENJUALAN = "create table riwayatpenjualan(id_riwayat integer null, id_barang integer null, jumlah integer null, harga text null, harga_katul text null, jenis_pembayaran text null, tgl_input text null, tgl_update text null );";
+        String CREATE_TABLE_RIWAYAT_PENJUALAN = "create table riwayatpenjualan(id_riwayat integer null, harga text null, harga_katul text null, jenis_pembayaran text null, tgl_input text null, tgl_update text null );";
         Log.d("Data", "onCreate : " + CREATE_TABLE_RIWAYAT_PENJUALAN);
         db.execSQL(CREATE_TABLE_RIWAYAT_PENJUALAN);
 

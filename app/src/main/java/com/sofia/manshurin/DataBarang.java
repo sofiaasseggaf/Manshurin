@@ -2,21 +2,35 @@ package com.sofia.manshurin;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.sofia.manshurin.adapter.AdapterBarang;
+import com.sofia.manshurin.helper.DataHelper;
+import com.sofia.manshurin.model.ModelBarang;
+import com.sofia.manshurin.utility.RecyclerItemClickListener;
+
+import java.util.List;
 
 public class DataBarang extends AppCompatActivity {
 
     ImageButton btn_tambah_barang;
     RecyclerView rvDataBarang;
     TextView txtload;
+    DataHelper dbCenter;
+    public static DataBarang dataMaster;
+    List<ModelBarang> listModelBarang;
+    AdapterBarang itemList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +41,8 @@ public class DataBarang extends AppCompatActivity {
         rvDataBarang = findViewById(R.id.rvDataBarang);
         txtload = findViewById(R.id.textloading);
 
+        dataMaster = this;
+        dbCenter = new DataHelper(this);
         start();
 
         btn_tambah_barang.setOnClickListener(new View.OnClickListener() {
@@ -66,19 +82,42 @@ public class DataBarang extends AppCompatActivity {
         }).start();
     }
 
-    private void getDataBarang(){
-        //get data barang dulu, kalo done baru gini
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                findViewById(R.id.framelayout).setVisibility(View.GONE);
-                setData();
-            }
-        });
+    public void getDataBarang(){
+        Log.d("DataBarang", "get all barang");
+        listModelBarang = dbCenter.getAllBarang();
+        if (listModelBarang!=null){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    findViewById(R.id.framelayout).setVisibility(View.GONE);
+                    setData();
+                }
+            });
+        } else {
+            findViewById(R.id.framelayout).setVisibility(View.GONE);
+            Toast.makeText(dataMaster, "Anda Belum Memiliki Barang", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void setData(){
-        // set data di recycle view
+        itemList = new AdapterBarang(listModelBarang);
+        rvDataBarang.setLayoutManager(new LinearLayoutManager(DataBarang.this));
+        rvDataBarang.setAdapter(itemList);
+        rvDataBarang.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), rvDataBarang,
+                new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Intent a = new Intent(DataBarang.this, DataBarangEdit.class);
+                        a.putExtra("idbarang", listModelBarang.get(position).getId_barang());
+                        startActivity(a);
+                    }
+
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+
+                    }
+                }));
     }
 
     private void goToHome(){

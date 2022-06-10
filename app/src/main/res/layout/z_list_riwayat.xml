@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/rect_list_laporan"
+    android:layout_marginBottom="10dp"
     android:padding="15dp">
 
     <TextView
