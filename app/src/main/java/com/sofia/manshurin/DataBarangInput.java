@@ -33,7 +33,7 @@ public class DataBarangInput extends AppCompatActivity {
     List<ModelBarang> listModelBarang;
     String now;
     Random rand;
-    int upperbound, id_random, id_saldo;
+    int upperbound, id_random, id_barang;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +76,7 @@ public class DataBarangInput extends AppCompatActivity {
                             } else {
                                 Toast.makeText(DataBarangInput.this, "ID Barang Sudah Terpakai", Toast.LENGTH_SHORT).show();
                             }
+                            break;
                         }
                     } else {
                         simpanDataBarang();
@@ -120,19 +121,19 @@ public class DataBarangInput extends AppCompatActivity {
         Log.d("DataBarang", "get all barang");
         listModelBarang = dbCenter.getAllBarang();
         if (listModelBarang!=null){
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    for(int i =0; i<listModelBarang.size(); i++){
-                        if(String.valueOf(listModelBarang.get(i).getId_barang()).equalsIgnoreCase(String.valueOf(id_random))){
-                            id_saldo = id_random;
+            for(int i =0; i<listModelBarang.size(); i++){
+                if(!String.valueOf(listModelBarang.get(i).getId_barang()).equalsIgnoreCase(String.valueOf(id_random))){
+                    id_barang = id_random;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
                             findViewById(R.id.framelayout).setVisibility(View.GONE);
-                            txt_id_barang.setText(id_saldo);
+                            txt_id_barang.setText(String.valueOf(id_barang));
                         }
-                    }
-
+                    });
                 }
-            });
+                break;
+            }
         } else {
             findViewById(R.id.framelayout).setVisibility(View.GONE);
         }

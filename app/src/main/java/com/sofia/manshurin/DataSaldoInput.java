@@ -23,15 +23,18 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 public class DataSaldoInput extends AppCompatActivity {
 
-    EditText txt_id_saldo, txt_nama_saldo, txt_jenis_saldo, txt_nominal_saldo, txt_deskripsi_saldo;
+    EditText txt_nama_saldo, txt_jenis_saldo, txt_nominal_saldo, txt_deskripsi_saldo;
     ImageButton btn_simpan;
-    TextView txtload;
+    TextView txtload, txt_id_saldo;
     DataHelper dbCenter;
     List<ModelSaldo> listModelSaldo;
     String now;
+    Random rand;
+    int upperbound, id_random, id_saldo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,11 @@ public class DataSaldoInput extends AppCompatActivity {
         dbCenter = new DataHelper(this);
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault());
         now = formatter.format(new Date());
+
+        rand = new Random(); //instance of random class
+        upperbound = 1000000;
+        //generate random values from 0-1000000
+        id_random = rand.nextInt(upperbound);
 
         start();
 
@@ -71,6 +79,7 @@ public class DataSaldoInput extends AppCompatActivity {
                             } else {
                                 Toast.makeText(DataSaldoInput.this, "ID Saldo Sudah Terpakai", Toast.LENGTH_SHORT).show();
                             }
+                            break;
                         }
                     } else {
                         simpanDataSaldo();
@@ -115,12 +124,19 @@ public class DataSaldoInput extends AppCompatActivity {
         Log.d("DataSaldo", "get all saldo");
         listModelSaldo = dbCenter.getAllSaldo();
         if (listModelSaldo!=null){
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    findViewById(R.id.framelayout).setVisibility(View.GONE);
+            for(int i =0; i<listModelSaldo.size(); i++){
+                if(!String.valueOf(listModelSaldo.get(i).getId_saldo()).equalsIgnoreCase(String.valueOf(id_random))){
+                    id_saldo = id_random;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            findViewById(R.id.framelayout).setVisibility(View.GONE);
+                            txt_id_saldo.setText(String.valueOf(id_saldo));
+                        }
+                    });
                 }
-            });
+                break;
+            }
         } else {
             findViewById(R.id.framelayout).setVisibility(View.GONE);
         }

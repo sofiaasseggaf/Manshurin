@@ -6,5 +6,5 @@
     android:textSize="14sp"
     android:padding="10dp"
     android:text="abc"
-    android:fontFamily="@font/roboto_regular"
+    android:fontFamily="@font/comfortaa_regular"
     android:lineSpacingExtra="3dp"/>

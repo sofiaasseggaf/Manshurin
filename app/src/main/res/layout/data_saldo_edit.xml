@@ -50,6 +50,7 @@
                 android:layout_width="match_parent"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
+                android:textColor="@color/darktext"
                 android:fontFamily="@font/montserrat_bold"
                 android:textSize="14sp"
                 android:layout_height="wrap_content" />
@@ -69,6 +70,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/rect_edittext"
             android:paddingLeft="10dp"
+            android:textColor="@color/black"
             android:fontFamily="@font/montserrat_bold"
             android:textSize="14sp"
             android:layout_marginTop="10dp"/>
@@ -87,6 +89,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/rect_edittext"
             android:paddingLeft="10dp"
+            android:textColor="@color/black"
             android:fontFamily="@font/montserrat_bold"
             android:textSize="14sp"
             android:layout_marginTop="10dp"/>
@@ -105,6 +108,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/rect_edittext"
             android:paddingLeft="10dp"
+            android:textColor="@color/black"
             android:fontFamily="@font/montserrat_bold"
             android:textSize="14sp"
             android:layout_marginTop="10dp"/>
@@ -122,6 +126,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
+            android:textColor="@color/black"
             android:fontFamily="@font/montserrat_bold"
             android:textSize="14sp"
             android:lines="3"
