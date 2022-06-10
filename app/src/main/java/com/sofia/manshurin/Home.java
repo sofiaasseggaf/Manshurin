@@ -1,19 +1,34 @@
 package com.sofia.manshurin;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.sofia.manshurin.adapter.AdapterBarang;
+import com.sofia.manshurin.helper.DataHelper;
+import com.sofia.manshurin.model.ModelBarang;
+import com.sofia.manshurin.utility.RecyclerItemClickListener;
+
+import java.util.List;
 
 public class Home extends AppCompatActivity {
 
     ImageButton btn_setting, btn_saldo, btn_barang, btn_pembelian, btn_penjualan, btn_riwayat_pembelian, btn_riwayat_penjualan;
-    TextView txt_total_saldo, txt_sisa_saldo;
+    TextView txt_total_saldo, txt_sisa_saldo, txtload;
     RecyclerView rv_home;
+    DataHelper dbCenter;
+    public static Home dataMaster;
+    List<ModelBarang> listModelBarang;
+    AdapterBarang itemList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +45,12 @@ public class Home extends AppCompatActivity {
         txt_total_saldo = findViewById(R.id.txt_total_saldo);
         txt_sisa_saldo = findViewById(R.id.txt_sisa_saldo);
         rv_home = findViewById(R.id.rv_home);
+        txtload = findViewById(R.id.textloading);
+
+        dataMaster = this;
+        dbCenter = new DataHelper(this);
+
+        start();
 
         btn_barang.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +105,70 @@ public class Home extends AppCompatActivity {
                 finish();
             }
         });
-
     }
+
+    private void start(){
+        findViewById(R.id.framelayout).setVisibility(View.VISIBLE);
+        final Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            int count = 0;
+            @Override
+            public void run() {
+                count++;
+                if (count == 1) {
+                    txtload.setText("Tunggu Sebentar Ya ."); }
+                else if (count == 2) {
+                    txtload.setText("Tunggu Sebentar Ya . ."); }
+                else if (count == 3) {
+                    txtload.setText("Tunggu Sebentar Ya . . ."); }
+                if (count == 3)
+                    count = 0;
+                handler.postDelayed(this, 1500);
+            }
+        };
+        handler.postDelayed(runnable, 1 * 1000);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                getDataBarang();
+            }
+        }).start();
+    }
+
+    public void getDataBarang(){
+        Log.d("DataBarang", "get all barang");
+        listModelBarang = dbCenter.getAllBarang();
+        if (listModelBarang!=null){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    findViewById(R.id.framelayout).setVisibility(View.GONE);
+                    setData();
+                }
+            });
+        } else {
+            findViewById(R.id.framelayout).setVisibility(View.GONE);
+        }
+    }
+
+    private void setData(){
+        itemList = new AdapterBarang(listModelBarang);
+        rv_home.setLayoutManager(new LinearLayoutManager(Home.this));
+        rv_home.setAdapter(itemList);
+        rv_home.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), rv_home,
+                new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Intent a = new Intent(Home.this, DataBarangEdit.class);
+                        a.putExtra("idbarang", listModelBarang.get(position).getId_barang());
+                        startActivity(a);
+                    }
+
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+
+                    }
+                }));
+    }
+
 }

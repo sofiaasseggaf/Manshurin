@@ -1,0 +1,10 @@
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textColor="@color/black"
+    android:textSize="14sp"
+    android:padding="10dp"
+    android:text="abc"
+    android:fontFamily="@font/roboto_regular"
+    android:lineSpacingExtra="3dp"/>

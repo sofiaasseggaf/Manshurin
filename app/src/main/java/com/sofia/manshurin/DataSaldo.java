@@ -1,20 +1,36 @@
 package com.sofia.manshurin;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.sofia.manshurin.adapter.AdapterBarang;
+import com.sofia.manshurin.adapter.AdapterSaldo;
+import com.sofia.manshurin.helper.DataHelper;
+import com.sofia.manshurin.model.ModelBarang;
+import com.sofia.manshurin.model.ModelSaldo;
+import com.sofia.manshurin.utility.RecyclerItemClickListener;
+
+import java.util.List;
 
 public class DataSaldo extends AppCompatActivity {
 
     ImageButton btn_tambah_saldo;
     RecyclerView rvDataSaldo;
     TextView txtload;
+    DataHelper dbCenter;
+    public static DataSaldo dataMaster;
+    List<ModelSaldo> listModelSaldo;
+    AdapterSaldo itemList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +41,8 @@ public class DataSaldo extends AppCompatActivity {
         rvDataSaldo = findViewById(R.id.rvDataSaldo);
         txtload = findViewById(R.id.textloading);
 
+        dataMaster = this;
+        dbCenter = new DataHelper(this);
         start();
 
         btn_tambah_saldo.setOnClickListener(new View.OnClickListener() {
@@ -63,19 +81,41 @@ public class DataSaldo extends AppCompatActivity {
         }).start();
     }
 
-    private void getDataSaldo(){
-        //get data saldo dulu, kalo done baru gini
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                findViewById(R.id.framelayout).setVisibility(View.GONE);
-                setData();
-            }
-        });
+    public void getDataSaldo(){
+        Log.d("DataSaldo", "get all saldo");
+        listModelSaldo = dbCenter.getAllSaldo();
+        if (listModelSaldo!=null){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    findViewById(R.id.framelayout).setVisibility(View.GONE);
+                    setData();
+                }
+            });
+        } else {
+            findViewById(R.id.framelayout).setVisibility(View.GONE);
+            Toast.makeText(dataMaster, "Anda Belum Memiliki Saldo", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void setData(){
-        // set data di recycle view
+        itemList = new AdapterSaldo(listModelSaldo);
+        rvDataSaldo.setLayoutManager(new LinearLayoutManager(DataSaldo.this));
+        rvDataSaldo.setAdapter(itemList);
+        rvDataSaldo.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), rvDataSaldo,
+                new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Intent a = new Intent(DataSaldo.this, DataSaldoEdit.class);
+                        a.putExtra("idsaldo", listModelSaldo.get(position).getId_saldo());
+                        startActivity(a);
+                    }
+
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+
+                    }
+                }));
     }
 
     private void goToHome(){

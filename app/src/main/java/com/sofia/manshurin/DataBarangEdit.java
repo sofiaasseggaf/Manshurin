@@ -63,7 +63,6 @@ public class DataBarangEdit extends AppCompatActivity {
                 } else {
                     Toast.makeText(DataBarangEdit.this, "Lengkapi Field Terlebih Dahulu", Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
 
@@ -71,7 +70,7 @@ public class DataBarangEdit extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(DataBarangEdit.this);
-                alert.setMessage("Hapus Barang ?")
+                alert.setMessage("Hapus Data Barang ?")
                         .setPositiveButton("Hapus", new DialogInterface.OnClickListener()                 {
                             public void onClick(DialogInterface dialog, int which) {
                                 hapusDataBarang();
@@ -142,6 +141,7 @@ public class DataBarangEdit extends AppCompatActivity {
                 "', tgl_update='"+now+"' " +
                 "where id_barang='"+ modelBarang.getId_barang() +"'");
         DataBarang.dataMaster.getDataBarang();
+        Home.dataMaster.getDataBarang();
         Toast.makeText(this, "Berhasil Update Data Barang", Toast.LENGTH_SHORT).show();
         goToDataBarang();
     }
@@ -150,6 +150,7 @@ public class DataBarangEdit extends AppCompatActivity {
         SQLiteDatabase db = dbCenter.getWritableDatabase();
         db.execSQL("delete from barang where id_barang = '"+modelBarang.getId_barang()+"'");
         DataBarang.dataMaster.getDataBarang();
+        Home.dataMaster.getDataBarang();
         goToDataBarang();
     }
 

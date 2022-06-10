@@ -7,13 +7,22 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.sofia.manshurin.helper.DataHelper;
+import com.sofia.manshurin.model.ModelBarang;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Pembelian extends AppCompatActivity {
 
@@ -22,6 +31,13 @@ public class Pembelian extends AppCompatActivity {
     TextView txt_total_biaya, txtload;
     ImageButton btn_masukkan_keranjang, btn_cek_keranjang;
     LinearLayout ll_barang_baru;
+    DataHelper dbCenter;
+    List<ModelBarang> listModelBarang;
+    List<String> namaBarang = new ArrayList<>();
+    ArrayAdapter<String> adapter;
+    String nama;
+    int id;
+    ModelBarang modelBarang;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +55,27 @@ public class Pembelian extends AppCompatActivity {
         ll_barang_baru = findViewById(R.id.ll_barang_baru);
         txtload = findViewById(R.id.textloading);
 
+        dbCenter = new DataHelper(this);
+
         start();
+
+        sp_barang.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1,
+                                       int arg2, long arg3) {
+                nama = sp_barang.getSelectedItem().toString();
+                for (int a=0; a<listModelBarang.size(); a++){
+                    try {
+                        if (listModelBarang.get(a).getNama_barang().equalsIgnoreCase(nama)){
+                            id = listModelBarang.get(a).getId_barang();
+                            modelBarang = listModelBarang.get(a);
+                        }
+                    } catch (Exception e){}
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) { }
+        });
 
         // set on click ke spinner, ketika barang dipilih, get id, nama, dan harganya
         // kalau barang yg dicari gaada, barti klik barang baru di value spinner paling bawah,
@@ -91,19 +127,32 @@ public class Pembelian extends AppCompatActivity {
         }).start();
     }
 
-    private void getDataBarang(){
-        //get data barang dulu, kalo done baru gini
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                findViewById(R.id.framelayout).setVisibility(View.GONE);
-                setSpinner();
+    public void getDataBarang(){
+        Log.d("DataBarang", "get all barang");
+        listModelBarang = dbCenter.getAllBarang();
+        if (listModelBarang!=null){
+            for (int i=0; i<listModelBarang.size(); i++){
+                namaBarang.add(listModelBarang.get(i).getNama_barang());
             }
-        });
+            if(namaBarang.size()>0){
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        findViewById(R.id.framelayout).setVisibility(View.GONE);
+                        setDataSpinner();
+                    }
+                });
+            }
+        } else {
+            findViewById(R.id.framelayout).setVisibility(View.GONE);
+            Toast.makeText(Pembelian.this, "Anda Belum Memiliki Barang", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private void setSpinner(){
-        // set spinner barang
+    private void setDataSpinner(){
+        adapter = new ArrayAdapter<String>(Pembelian.this, R.layout.z_spinner_list, namaBarang);
+        adapter.setDropDownViewResource(R.layout.z_spinner_list);
+        sp_barang.setAdapter(adapter);
     }
 
     private void simpan(){

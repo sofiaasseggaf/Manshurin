@@ -5,19 +5,33 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sofia.manshurin.helper.DataHelper;
+import com.sofia.manshurin.model.ModelBarang;
+import com.sofia.manshurin.model.ModelSaldo;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
 public class DataSaldoInput extends AppCompatActivity {
 
-    EditText txt_id_saldo, txt_jenis_saldo, txt_nominal_saldo, txt_deskripsi_saldo;
+    EditText txt_id_saldo, txt_nama_saldo, txt_jenis_saldo, txt_nominal_saldo, txt_deskripsi_saldo;
     ImageButton btn_simpan;
     TextView txtload;
+    DataHelper dbCenter;
+    List<ModelSaldo> listModelSaldo;
+    String now;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,18 +40,44 @@ public class DataSaldoInput extends AppCompatActivity {
 
         txt_id_saldo = findViewById(R.id.txt_id_saldo);
         txt_jenis_saldo = findViewById(R.id.txt_jenis_saldo);
+        txt_nama_saldo = findViewById(R.id.txt_nama_saldo);
         txt_nominal_saldo = findViewById(R.id.txt_nominal_saldo);
         txt_deskripsi_saldo = findViewById(R.id.txt_deskripsi_saldo);
         btn_simpan = findViewById(R.id.btn_simpan);
         txtload = findViewById(R.id.textloading);
+
+        dbCenter = new DataHelper(this);
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault());
+        now = formatter.format(new Date());
 
         start();
 
         btn_simpan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // cek id saldo, kalo ada yg sama, di notice
-                simpan();
+                if(!txt_id_saldo.getText().toString().equalsIgnoreCase("") && !txt_nama_saldo.getText().toString().equalsIgnoreCase("") &&
+                        !txt_jenis_saldo.getText().toString().equalsIgnoreCase("") && !txt_nominal_saldo.getText().toString().equalsIgnoreCase("") &&
+                        !txt_deskripsi_saldo.getText().toString().equalsIgnoreCase("")){
+                    if(listModelSaldo.size()>0){
+                        for(int i=0; i<listModelSaldo.size(); i++){
+                            String id = txt_id_saldo.getText().toString();
+                            String nama = txt_nama_saldo.getText().toString();
+                            if(!String.valueOf(listModelSaldo.get(i).getId_saldo()).equalsIgnoreCase(id)){
+                                if (!listModelSaldo.get(i).getNama_saldo().equalsIgnoreCase(nama)){
+                                    simpanDataSaldo();
+                                } else {
+                                    Toast.makeText(DataSaldoInput.this, "Nama Saldo Sudah Terpakai", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(DataSaldoInput.this, "ID Saldo Sudah Terpakai", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    } else {
+                        simpanDataSaldo();
+                    }
+                } else {
+                    Toast.makeText(DataSaldoInput.this, "Lengkapi Field Terlebih Dahulu", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -72,52 +112,33 @@ public class DataSaldoInput extends AppCompatActivity {
     }
 
     private void getDataSaldo(){
-        //get data saldo dulu, kalo done baru gini
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                findViewById(R.id.framelayout).setVisibility(View.GONE);
-            }
-        });
-    }
-
-    private void simpan(){
-        findViewById(R.id.framelayout).setVisibility(View.VISIBLE);
-        final Handler handler = new Handler();
-        Runnable runnable = new Runnable() {
-            int count = 0;
-            @Override
-            public void run() {
-                count++;
-                if (count == 1) {
-                    txtload.setText("Tunggu Sebentar Ya ."); }
-                else if (count == 2) {
-                    txtload.setText("Tunggu Sebentar Ya . ."); }
-                else if (count == 3) {
-                    txtload.setText("Tunggu Sebentar Ya . . ."); }
-                if (count == 3)
-                    count = 0;
-                handler.postDelayed(this, 1500);
-            }
-        };
-        handler.postDelayed(runnable, 1 * 1000);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                simpanDataSaldo();
-            }
-        }).start();
+        Log.d("DataSaldo", "get all saldo");
+        listModelSaldo = dbCenter.getAllSaldo();
+        if (listModelSaldo!=null){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    findViewById(R.id.framelayout).setVisibility(View.GONE);
+                }
+            });
+        } else {
+            findViewById(R.id.framelayout).setVisibility(View.GONE);
+        }
     }
 
     private void simpanDataSaldo(){
-        //simpan data saldo ke sqlite, kalo done baru gini
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                findViewById(R.id.framelayout).setVisibility(View.GONE);
-                Toast.makeText(DataSaldoInput.this, "Berhasil Tambah Data Saldo", Toast.LENGTH_SHORT).show();
-            }
-        });
+        SQLiteDatabase db = dbCenter.getWritableDatabase();
+        db.execSQL("insert into saldo(id_saldo, nama_saldo, jenis_saldo, nominal_saldo, desk_saldo, tgl_input, tgl_update) values('" +
+                txt_id_saldo.getText() + "','" +
+                txt_nama_saldo.getText().toString() + "','" +
+                txt_jenis_saldo.getText().toString() + "','" +
+                txt_nominal_saldo.getText().toString() + "','" +
+                txt_deskripsi_saldo.getText().toString() + "','" +
+                now + "','" +
+                now + "')");
+        Toast.makeText(getApplicationContext(), "Berhasil Tambah Saldo", Toast.LENGTH_SHORT).show();
+        DataSaldo.dataMaster.getDataSaldo();
+        goToDataSaldo();
     }
 
     private void goToDataSaldo(){

@@ -5,19 +5,33 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sofia.manshurin.helper.DataHelper;
+import com.sofia.manshurin.model.ModelBarang;
+import com.sofia.manshurin.model.ModelSaldo;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class DataSaldoEdit extends AppCompatActivity {
 
-    EditText txt_jenis_saldo, txt_nominal_saldo, txt_deskripsi_saldo;
-    ImageButton btn_simpan;
+    EditText txt_jenis_saldo, txt_nominal_saldo, txt_deskripsi_saldo, txt_nama_saldo;
+    ImageButton btn_simpan, btn_hapus;
     TextView txt_id_saldo, txtload;
+    ModelSaldo modelSaldo;
+    int id;
+    DataHelper dbCenter;
+    String now;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,15 +42,47 @@ public class DataSaldoEdit extends AppCompatActivity {
         txt_jenis_saldo = findViewById(R.id.txt_jenis_saldo);
         txt_nominal_saldo = findViewById(R.id.txt_nominal_saldo);
         txt_deskripsi_saldo = findViewById(R.id.txt_deskripsi_saldo);
+        txt_nama_saldo = findViewById(R.id.txt_nama_saldo);
         btn_simpan = findViewById(R.id.btn_simpan);
+        btn_hapus = findViewById(R.id.btn_hapus);
         txtload = findViewById(R.id.textloading);
 
+        dbCenter = new DataHelper(this);
+
+        Intent intent = getIntent();
+        id = intent.getIntExtra("idsaldo", 0);
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault());
+        now = formatter.format(new Date());
+
+
         start();
+
 
         btn_simpan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                update();
+                if(!txt_jenis_saldo.getText().toString().equalsIgnoreCase("") && !txt_deskripsi_saldo.getText().toString().equalsIgnoreCase("") &&
+                        !txt_nominal_saldo.getText().toString().equalsIgnoreCase("")){
+                    updateDataSaldo();
+                } else {
+                    Toast.makeText(DataSaldoEdit.this, "Lengkapi Field Terlebih Dahulu", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        btn_hapus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(DataSaldoEdit.this);
+                alert.setMessage("Hapus Data Saldo ?")
+                        .setPositiveButton("Hapus", new DialogInterface.OnClickListener()                 {
+                            public void onClick(DialogInterface dialog, int which) {
+                                hapusDataSaldo();
+                            }
+                        }).setNegativeButton("Cancel", null);
+
+                AlertDialog alert1 = alert.create();
+                alert1.show();
             }
         });
 
@@ -65,63 +111,51 @@ public class DataSaldoEdit extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                getDataSaldoWithID();
+                getDataSaldoWithID(id);
             }
         }).start();
     }
 
-    private void getDataSaldoWithID(){
-        //get data saldo with id dulu, kalo done baru gini
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                findViewById(R.id.framelayout).setVisibility(View.GONE);
-                setData();
-            }
-        });
+    private void getDataSaldoWithID(int i){
+        Log.d("DataSaldo", "get saldo");
+        modelSaldo = dbCenter.getSaldo(i);
+        if (modelSaldo!=null){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    findViewById(R.id.framelayout).setVisibility(View.GONE);
+                    setDataSaldo();
+                }
+            });
+        }
     }
 
-    private void setData(){
-        // set data
-    }
-
-    private void update(){
-        findViewById(R.id.framelayout).setVisibility(View.VISIBLE);
-        final Handler handler = new Handler();
-        Runnable runnable = new Runnable() {
-            int count = 0;
-            @Override
-            public void run() {
-                count++;
-                if (count == 1) {
-                    txtload.setText("Tunggu Sebentar Ya ."); }
-                else if (count == 2) {
-                    txtload.setText("Tunggu Sebentar Ya . ."); }
-                else if (count == 3) {
-                    txtload.setText("Tunggu Sebentar Ya . . ."); }
-                if (count == 3)
-                    count = 0;
-                handler.postDelayed(this, 1500);
-            }
-        };
-        handler.postDelayed(runnable, 1 * 1000);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                updateDataSaldo();
-            }
-        }).start();
+    private void setDataSaldo(){
+        txt_id_saldo.setText(String.valueOf(modelSaldo.getId_saldo()));
+        txt_jenis_saldo.setText(modelSaldo.getJenis_saldo());
+        txt_nama_saldo.setText(modelSaldo.getNama_saldo());
+        txt_nominal_saldo.setText(modelSaldo.getNominal_saldo());
+        txt_deskripsi_saldo.setText(modelSaldo.getDesk_saldo());
     }
 
     private void updateDataSaldo(){
-        //update data saldo ke sqlite, kalo done baru gini
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                findViewById(R.id.framelayout).setVisibility(View.GONE);
-                Toast.makeText(DataSaldoEdit.this, "Berhasil Edit Data Saldo", Toast.LENGTH_SHORT).show();
-            }
-        });
+        SQLiteDatabase db = dbCenter.getWritableDatabase();
+        db.execSQL("update saldo set nama_saldo='"+txt_nama_saldo.getText().toString()+
+                "', jenis_saldo='"+txt_jenis_saldo.getText().toString()+
+                "', nominal_saldo='"+txt_nominal_saldo.getText().toString()+
+                "', desk_saldo='"+txt_deskripsi_saldo.getText().toString()+
+                "', tgl_update='"+now+"' " +
+                "where id_saldo='"+ modelSaldo.getId_saldo() +"'");
+        DataSaldo.dataMaster.getDataSaldo();
+        Toast.makeText(this, "Berhasil Update Data Saldo", Toast.LENGTH_SHORT).show();
+        goToDataSaldo();
+    }
+
+    private void hapusDataSaldo(){
+        SQLiteDatabase db = dbCenter.getWritableDatabase();
+        db.execSQL("delete from saldo where id_saldo = '"+modelSaldo.getId_saldo()+"'");
+        DataSaldo.dataMaster.getDataSaldo();
+        goToDataSaldo();
     }
 
     private void goToDataSaldo(){

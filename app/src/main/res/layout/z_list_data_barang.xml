@@ -7,7 +7,6 @@
     android:background="@drawable/rect_listbarang_2"
     android:layout_marginBottom="10dp"
     android:padding="15dp">
-
     <TextView
         android:id="@+id/nama_barang"
         android:layout_width="wrap_content"

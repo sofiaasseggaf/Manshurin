@@ -22,15 +22,18 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 public class DataBarangInput extends AppCompatActivity {
 
-    EditText txt_id_barang, txt_nama_barang, txt_harga_barang, txt_deskripsi_barang;
+    EditText txt_nama_barang, txt_harga_barang, txt_deskripsi_barang;
     ImageButton btn_simpan;
-    TextView txtload;
+    TextView txtload, txt_id_barang;
     DataHelper dbCenter;
     List<ModelBarang> listModelBarang;
     String now;
+    Random rand;
+    int upperbound, id_random, id_saldo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +50,11 @@ public class DataBarangInput extends AppCompatActivity {
         dbCenter = new DataHelper(this);
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault());
         now = formatter.format(new Date());
+
+        rand = new Random(); //instance of random class
+        upperbound = 1000000;
+        //generate random values from 0-1000000
+        id_random = rand.nextInt(upperbound);
 
         start();
 
@@ -115,13 +123,19 @@ public class DataBarangInput extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    findViewById(R.id.framelayout).setVisibility(View.GONE);
+                    for(int i =0; i<listModelBarang.size(); i++){
+                        if(String.valueOf(listModelBarang.get(i).getId_barang()).equalsIgnoreCase(String.valueOf(id_random))){
+                            id_saldo = id_random;
+                            findViewById(R.id.framelayout).setVisibility(View.GONE);
+                            txt_id_barang.setText(id_saldo);
+                        }
+                    }
+
                 }
             });
         } else {
             findViewById(R.id.framelayout).setVisibility(View.GONE);
         }
-
     }
 
     private void simpanDataBarang(){
@@ -136,6 +150,7 @@ public class DataBarangInput extends AppCompatActivity {
                 now + "')");
         Toast.makeText(getApplicationContext(), "Berhasil Tambah Barang", Toast.LENGTH_SHORT).show();
         DataBarang.dataMaster.getDataBarang();
+        Home.dataMaster.getDataBarang();
         goToDataBarang();
     }
 

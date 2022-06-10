@@ -61,6 +61,24 @@
             android:fontFamily="@font/montserrat_bold"
             android:textSize="14sp"
             android:layout_marginTop="12dp"
+            android:text="Nama Saldo"/>
+
+        <EditText
+            android:id="@+id/txt_nama_saldo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rect_edittext"
+            android:paddingLeft="10dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:textSize="14sp"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_bold"
+            android:textSize="14sp"
+            android:layout_marginTop="12dp"
             android:text="Jenis Saldo"/>
 
         <EditText
@@ -113,14 +131,26 @@
     </LinearLayout>
 
 
-    <ImageButton
-        android:id="@+id/btn_simpan"
+    <LinearLayout
+        android:id="@+id/bottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/btn_simpan"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp"/>
+        android:orientation="vertical"
+        android:layout_marginBottom="30dp">
+        <ImageButton
+            android:id="@+id/btn_simpan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_simpan" />
+        <ImageButton
+            android:id="@+id/btn_hapus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/btn_simpan" />
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/framelayout"

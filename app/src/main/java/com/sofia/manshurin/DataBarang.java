@@ -43,6 +43,7 @@ public class DataBarang extends AppCompatActivity {
 
         dataMaster = this;
         dbCenter = new DataHelper(this);
+
         start();
 
         btn_tambah_barang.setOnClickListener(new View.OnClickListener() {
@@ -97,7 +98,6 @@ public class DataBarang extends AppCompatActivity {
             findViewById(R.id.framelayout).setVisibility(View.GONE);
             Toast.makeText(dataMaster, "Anda Belum Memiliki Barang", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     private void setData(){
