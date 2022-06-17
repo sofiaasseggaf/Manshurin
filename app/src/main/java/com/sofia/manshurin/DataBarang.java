@@ -86,7 +86,7 @@ public class DataBarang extends AppCompatActivity {
     public void getDataBarang(){
         Log.d("DataBarang", "get all barang");
         listModelBarang = dbCenter.getAllBarang();
-        if (listModelBarang!=null){
+        if (listModelBarang.size()>0){
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -95,8 +95,14 @@ public class DataBarang extends AppCompatActivity {
                 }
             });
         } else {
-            findViewById(R.id.framelayout).setVisibility(View.GONE);
-            Toast.makeText(dataMaster, "Anda Belum Memiliki Barang", Toast.LENGTH_SHORT).show();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    findViewById(R.id.framelayout).setVisibility(View.GONE);
+                    Toast.makeText(dataMaster, "Anda Belum Memiliki Barang", Toast.LENGTH_SHORT).show();
+                }
+            });
+
         }
     }
 

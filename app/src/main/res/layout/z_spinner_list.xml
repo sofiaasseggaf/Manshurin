@@ -5,6 +5,7 @@
     android:textColor="@color/black"
     android:textSize="14sp"
     android:padding="10dp"
-    android:text="abc"
+    android:layout_marginRight="20dp"
+    android:background="@color/white"
     android:fontFamily="@font/comfortaa_regular"
     android:lineSpacingExtra="3dp"/>

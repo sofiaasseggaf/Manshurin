@@ -33,7 +33,8 @@ public class DataBarangInput extends AppCompatActivity {
     List<ModelBarang> listModelBarang;
     String now;
     Random rand;
-    int upperbound, id_random, id_barang;
+    int upperbound, id_random, id_barang, checkID, checkNama;
+    String id, nama;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +51,6 @@ public class DataBarangInput extends AppCompatActivity {
         dbCenter = new DataHelper(this);
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.getDefault());
         now = formatter.format(new Date());
-
         rand = new Random(); //instance of random class
         upperbound = 1000000;
         //generate random values from 0-1000000
@@ -63,24 +63,7 @@ public class DataBarangInput extends AppCompatActivity {
             public void onClick(View v) {
                 if(!txt_id_barang.getText().toString().equalsIgnoreCase("") && !txt_nama_barang.getText().toString().equalsIgnoreCase("") &&
                         !txt_harga_barang.getText().toString().equalsIgnoreCase("") && !txt_deskripsi_barang.getText().toString().equalsIgnoreCase("")){
-                    if(listModelBarang.size()>0){
-                        for(int i=0; i<listModelBarang.size(); i++){
-                            String id = txt_id_barang.getText().toString();
-                            String nama = txt_nama_barang.getText().toString();
-                            if(!String.valueOf(listModelBarang.get(i).getId_barang()).equalsIgnoreCase(id)){
-                                if (!listModelBarang.get(i).getNama_barang().equalsIgnoreCase(nama)){
-                                    simpanDataBarang();
-                                } else {
-                                    Toast.makeText(DataBarangInput.this, "Nama Barang Sudah Terpakai", Toast.LENGTH_SHORT).show();
-                                }
-                            } else {
-                                Toast.makeText(DataBarangInput.this, "ID Barang Sudah Terpakai", Toast.LENGTH_SHORT).show();
-                            }
-                            break;
-                        }
-                    } else {
-                        simpanDataBarang();
-                    }
+                    checkid();
                 } else {
                     Toast.makeText(DataBarangInput.this, "Lengkapi Field Terlebih Dahulu", Toast.LENGTH_SHORT).show();
                 }
@@ -120,7 +103,7 @@ public class DataBarangInput extends AppCompatActivity {
     private void getDataBarang(){
         Log.d("DataBarang", "get all barang");
         listModelBarang = dbCenter.getAllBarang();
-        if (listModelBarang!=null){
+        if (listModelBarang.size()>0){
             for(int i =0; i<listModelBarang.size(); i++){
                 if(!String.valueOf(listModelBarang.get(i).getId_barang()).equalsIgnoreCase(String.valueOf(id_random))){
                     id_barang = id_random;
@@ -136,6 +119,53 @@ public class DataBarangInput extends AppCompatActivity {
             }
         } else {
             findViewById(R.id.framelayout).setVisibility(View.GONE);
+            id_barang = id_random;
+            txt_id_barang.setText(String.valueOf(id_barang));
+        }
+    }
+
+    private void checkid(){
+        if(listModelBarang.size()>0){
+            id = txt_id_barang.getText().toString();
+            //nama = txt_nama_barang.getText().toString();
+            for(int i=0; i<listModelBarang.size(); i++){
+                if(String.valueOf(listModelBarang.get(i).getId_barang()).equalsIgnoreCase(id)) {
+                    Toast.makeText(DataBarangInput.this, "ID Barang Sudah Terpakai", Toast.LENGTH_SHORT).show();
+                    checkID = 1;
+                    break;
+                }
+            }
+        } else {
+            simpanDataBarang();
+        }
+
+        if (checkID!=1){
+            checkID=0;
+            checknama();
+        } else {
+            checkID=0;
+        }
+    }
+
+    private void checknama(){
+        if(listModelBarang.size()>0){
+            nama = txt_nama_barang.getText().toString();
+            for(int i=0; i<listModelBarang.size(); i++){
+                if(String.valueOf(listModelBarang.get(i).getNama_barang()).equalsIgnoreCase(nama)) {
+                    Toast.makeText(DataBarangInput.this, "Nama Barang Sudah Terpakai", Toast.LENGTH_SHORT).show();
+                    checkNama = 1;
+                    break;
+                }
+            }
+        } else {
+            simpanDataBarang();
+        }
+
+        if (checkNama!=1){
+            checkNama=0;
+            simpanDataBarang();
+        } else {
+            checkNama=0;
         }
     }
 

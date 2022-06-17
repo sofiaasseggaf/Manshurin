@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sofia.manshurin.adapter.AdapterBarang;
+import com.sofia.manshurin.adapter.AdapterBarangHome;
 import com.sofia.manshurin.helper.DataHelper;
 import com.sofia.manshurin.model.ModelBarang;
 import com.sofia.manshurin.utility.RecyclerItemClickListener;
@@ -28,7 +29,7 @@ public class Home extends AppCompatActivity {
     DataHelper dbCenter;
     public static Home dataMaster;
     List<ModelBarang> listModelBarang;
-    AdapterBarang itemList;
+    AdapterBarangHome itemList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,7 +153,7 @@ public class Home extends AppCompatActivity {
     }
 
     private void setData(){
-        itemList = new AdapterBarang(listModelBarang);
+        itemList = new AdapterBarangHome(listModelBarang);
         rv_home.setLayoutManager(new LinearLayoutManager(Home.this));
         rv_home.setAdapter(itemList);
         rv_home.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), rv_home,

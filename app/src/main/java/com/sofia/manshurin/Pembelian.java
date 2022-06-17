@@ -35,7 +35,7 @@ public class Pembelian extends AppCompatActivity {
     List<ModelBarang> listModelBarang;
     List<String> namaBarang = new ArrayList<>();
     ArrayAdapter<String> adapter;
-    String nama;
+    String nama, harga;
     int id;
     ModelBarang modelBarang;
 
@@ -63,21 +63,24 @@ public class Pembelian extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                                        int arg2, long arg3) {
-                nama = sp_barang.getSelectedItem().toString();
-                for (int a=0; a<listModelBarang.size(); a++){
-                    try {
-                        if (listModelBarang.get(a).getNama_barang().equalsIgnoreCase(nama)){
-                            id = listModelBarang.get(a).getId_barang();
-                            modelBarang = listModelBarang.get(a);
-                        }
-                    } catch (Exception e){}
+                if (namaBarang.size()>0){
+                    nama = sp_barang.getSelectedItem().toString();
+                    for (int a=0; a<listModelBarang.size(); a++){
+                        try {
+                            if (listModelBarang.get(a).getNama_barang().equalsIgnoreCase(nama)){
+                                id = listModelBarang.get(a).getId_barang();
+                                harga = listModelBarang.get(a).getHarga_barang();
+                                modelBarang = listModelBarang.get(a);
+                            }
+                        } catch (Exception e){}
+                    }
                 }
             }
             @Override
             public void onNothingSelected(AdapterView<?> arg0) { }
         });
 
-        // set on click ke spinner, ketika barang dipilih, get id, nama, dan harganya
+
         // kalau barang yg dicari gaada, barti klik barang baru di value spinner paling bawah,
         // trus set ll_barang_baru visibilitinya visible
         // kalau klik selain itu, visibilitinya gone in lagi
@@ -86,7 +89,19 @@ public class Pembelian extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // cek id, nama, harga, jumlah, harga katul, jumlah katul, total
-                simpan();
+                // simpan();
+                AlertDialog.Builder builder = new AlertDialog.Builder(Pembelian.this);
+                builder.setMessage("Fitur Sedang Dikerjakan")
+                        .setNegativeButton("Kembali", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent a = new Intent(Pembelian.this, Pembelian.class);
+                                startActivity(a);
+                                finish();
+                            }
+                        })
+                        .create()
+                        .show();
             }
         });
 
@@ -130,7 +145,7 @@ public class Pembelian extends AppCompatActivity {
     public void getDataBarang(){
         Log.d("DataBarang", "get all barang");
         listModelBarang = dbCenter.getAllBarang();
-        if (listModelBarang!=null){
+        if (listModelBarang.size()>0){
             for (int i=0; i<listModelBarang.size(); i++){
                 namaBarang.add(listModelBarang.get(i).getNama_barang());
             }

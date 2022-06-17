@@ -142,7 +142,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_marginBottom="30dp">
         <ImageButton
             android:id="@+id/btn_simpan"
@@ -153,8 +153,8 @@
             android:id="@+id/btn_hapus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/btn_simpan" />
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/btn_hapus" />
     </LinearLayout>
 
     <FrameLayout

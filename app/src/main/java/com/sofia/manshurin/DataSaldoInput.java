@@ -34,7 +34,8 @@ public class DataSaldoInput extends AppCompatActivity {
     List<ModelSaldo> listModelSaldo;
     String now;
     Random rand;
-    int upperbound, id_random, id_saldo;
+    int upperbound, id_random, id_saldo, checkID, checkNama;
+    String id, nama;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,25 +66,8 @@ public class DataSaldoInput extends AppCompatActivity {
             public void onClick(View v) {
                 if(!txt_id_saldo.getText().toString().equalsIgnoreCase("") && !txt_nama_saldo.getText().toString().equalsIgnoreCase("") &&
                         !txt_jenis_saldo.getText().toString().equalsIgnoreCase("") && !txt_nominal_saldo.getText().toString().equalsIgnoreCase("") &&
-                        !txt_deskripsi_saldo.getText().toString().equalsIgnoreCase("")){
-                    if(listModelSaldo.size()>0){
-                        for(int i=0; i<listModelSaldo.size(); i++){
-                            String id = txt_id_saldo.getText().toString();
-                            String nama = txt_nama_saldo.getText().toString();
-                            if(!String.valueOf(listModelSaldo.get(i).getId_saldo()).equalsIgnoreCase(id)){
-                                if (!listModelSaldo.get(i).getNama_saldo().equalsIgnoreCase(nama)){
-                                    simpanDataSaldo();
-                                } else {
-                                    Toast.makeText(DataSaldoInput.this, "Nama Saldo Sudah Terpakai", Toast.LENGTH_SHORT).show();
-                                }
-                            } else {
-                                Toast.makeText(DataSaldoInput.this, "ID Saldo Sudah Terpakai", Toast.LENGTH_SHORT).show();
-                            }
-                            break;
-                        }
-                    } else {
-                        simpanDataSaldo();
-                    }
+                        !txt_deskripsi_saldo.getText().toString().equalsIgnoreCase("")) {
+                    checkId();
                 } else {
                     Toast.makeText(DataSaldoInput.this, "Lengkapi Field Terlebih Dahulu", Toast.LENGTH_SHORT).show();
                 }
@@ -123,7 +107,7 @@ public class DataSaldoInput extends AppCompatActivity {
     private void getDataSaldo(){
         Log.d("DataSaldo", "get all saldo");
         listModelSaldo = dbCenter.getAllSaldo();
-        if (listModelSaldo!=null){
+        if (listModelSaldo.size()>0){
             for(int i =0; i<listModelSaldo.size(); i++){
                 if(!String.valueOf(listModelSaldo.get(i).getId_saldo()).equalsIgnoreCase(String.valueOf(id_random))){
                     id_saldo = id_random;
@@ -139,6 +123,53 @@ public class DataSaldoInput extends AppCompatActivity {
             }
         } else {
             findViewById(R.id.framelayout).setVisibility(View.GONE);
+            id_saldo = id_random;
+            txt_id_saldo.setText(String.valueOf(id_saldo));
+        }
+    }
+
+    private void checkId(){
+        if(listModelSaldo.size()>0){
+            id = txt_id_saldo.getText().toString();
+            //nama = txt_nama_barang.getText().toString();
+            for(int i=0; i<listModelSaldo.size(); i++){
+                if(String.valueOf(listModelSaldo.get(i).getId_saldo()).equalsIgnoreCase(id)) {
+                    Toast.makeText(DataSaldoInput.this, "ID Saldo Sudah Terpakai", Toast.LENGTH_SHORT).show();
+                    checkID = 1;
+                    break;
+                }
+            }
+        } else {
+            simpanDataSaldo();
+        }
+
+        if (checkID!=1){
+            checkID=0;
+            checknama();
+        } else {
+            checkID=0;
+        }
+    }
+
+    private void checknama(){
+        if(listModelSaldo.size()>0){
+            nama = txt_id_saldo.getText().toString();
+            for(int i=0; i<listModelSaldo.size(); i++){
+                if(String.valueOf(listModelSaldo.get(i).getNama_saldo()).equalsIgnoreCase(nama)) {
+                    Toast.makeText(DataSaldoInput.this, "Nama Saldo Sudah Terpakai", Toast.LENGTH_SHORT).show();
+                    checkNama = 1;
+                    break;
+                }
+            }
+        } else {
+            simpanDataSaldo();
+        }
+
+        if (checkNama!=1){
+            checkNama=0;
+            simpanDataSaldo();
+        } else {
+            checkNama=0;
         }
     }
 

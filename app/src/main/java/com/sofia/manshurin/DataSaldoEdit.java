@@ -21,6 +21,7 @@ import com.sofia.manshurin.model.ModelSaldo;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class DataSaldoEdit extends AppCompatActivity {
@@ -29,9 +30,10 @@ public class DataSaldoEdit extends AppCompatActivity {
     ImageButton btn_simpan, btn_hapus;
     TextView txt_id_saldo, txtload;
     ModelSaldo modelSaldo;
-    int id;
+    List<ModelSaldo> listModelSaldo;
+    int id, checkNama;
     DataHelper dbCenter;
-    String now;
+    String now, namaAwal, namaAkhir;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +65,7 @@ public class DataSaldoEdit extends AppCompatActivity {
             public void onClick(View v) {
                 if(!txt_jenis_saldo.getText().toString().equalsIgnoreCase("") && !txt_deskripsi_saldo.getText().toString().equalsIgnoreCase("") &&
                         !txt_nominal_saldo.getText().toString().equalsIgnoreCase("")){
-                    updateDataSaldo();
+                    checkNama();
                 } else {
                     Toast.makeText(DataSaldoEdit.this, "Lengkapi Field Terlebih Dahulu", Toast.LENGTH_SHORT).show();
                 }
@@ -111,9 +113,15 @@ public class DataSaldoEdit extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                getDataSaldoWithID(id);
+                getDataSaldo();
             }
         }).start();
+    }
+
+    public void getDataSaldo(){
+        Log.d("DataSaldo", "get all saldo");
+        listModelSaldo = dbCenter.getAllSaldo();
+        getDataSaldoWithID(id);
     }
 
     private void getDataSaldoWithID(int i){
@@ -131,11 +139,40 @@ public class DataSaldoEdit extends AppCompatActivity {
     }
 
     private void setDataSaldo(){
+        namaAwal = txt_nama_saldo.getText().toString();
         txt_id_saldo.setText(String.valueOf(modelSaldo.getId_saldo()));
         txt_jenis_saldo.setText(modelSaldo.getJenis_saldo());
         txt_nama_saldo.setText(modelSaldo.getNama_saldo());
         txt_nominal_saldo.setText(modelSaldo.getNominal_saldo());
         txt_deskripsi_saldo.setText(modelSaldo.getDesk_saldo());
+    }
+
+    private void checkNama(){
+        namaAkhir = txt_nama_saldo.getText().toString();
+        if (namaAkhir.equalsIgnoreCase(namaAkhir)){
+            updateDataSaldo();
+        } else {
+            if(listModelSaldo.size()>0){
+                for(int i=0; i<listModelSaldo.size(); i++){
+                    if(String.valueOf(listModelSaldo.get(i).getNama_saldo()).equalsIgnoreCase(namaAkhir)) {
+                        Toast.makeText(DataSaldoEdit.this, "Nama Saldo Sudah Terpakai", Toast.LENGTH_SHORT).show();
+                        checkNama = 1;
+                        break;
+                    }
+                }
+            } else {
+                updateDataSaldo();
+            }
+        }
+
+
+        if (checkNama!=1){
+            checkNama=0;
+            updateDataSaldo();
+        } else {
+            checkNama=0;
+        }
+
     }
 
     private void updateDataSaldo(){

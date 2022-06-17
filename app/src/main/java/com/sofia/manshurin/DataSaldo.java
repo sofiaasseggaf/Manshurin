@@ -84,7 +84,7 @@ public class DataSaldo extends AppCompatActivity {
     public void getDataSaldo(){
         Log.d("DataSaldo", "get all saldo");
         listModelSaldo = dbCenter.getAllSaldo();
-        if (listModelSaldo!=null){
+        if (listModelSaldo.size()>0){
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -93,8 +93,14 @@ public class DataSaldo extends AppCompatActivity {
                 }
             });
         } else {
-            findViewById(R.id.framelayout).setVisibility(View.GONE);
-            Toast.makeText(dataMaster, "Anda Belum Memiliki Saldo", Toast.LENGTH_SHORT).show();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    findViewById(R.id.framelayout).setVisibility(View.GONE);
+                    Toast.makeText(dataMaster, "Anda Belum Memiliki Saldo", Toast.LENGTH_SHORT).show();
+                }
+            });
+
         }
     }
 

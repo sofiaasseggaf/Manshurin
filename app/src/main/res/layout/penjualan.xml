@@ -48,14 +48,14 @@
             android:textSize="14sp"
             android:layout_height="wrap_content"
             android:background="@drawable/rect_spinner"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="5dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat_bold"
             android:textSize="14sp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="10dp"
             android:text="Jumlah Barang"/>
 
         <EditText
@@ -66,14 +66,14 @@
             android:paddingLeft="10dp"
             android:fontFamily="@font/montserrat_bold"
             android:textSize="14sp"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="5dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat_bold"
             android:textSize="14sp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="10dp"
             android:text="Harga Jual"/>
 
         <EditText
@@ -84,71 +84,17 @@
             android:paddingLeft="10dp"
             android:fontFamily="@font/montserrat_bold"
             android:textSize="14sp"
-            android:layout_marginTop="10dp"/>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:id="@+id/ll"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:textSize="14sp"
-                    android:text="Jumlah Katul"/>
-                <EditText
-                    android:id="@+id/txt_jumlah_katul"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:textSize="14sp"
-                    android:lines="3"
-                    android:background="@drawable/rect_jml_katul"
-                    android:layout_marginTop="10dp"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/ll"
-                android:layout_marginLeft="15dp"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:textSize="14sp"
-                    android:text="Harga Katul"/>
-                <EditText
-                    android:id="@+id/txt_harga_katul"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingLeft="10dp"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:textSize="14sp"
-                    android:lines="3"
-                    android:background="@drawable/rect_harga_katul"
-                    android:layout_marginTop="10dp"/>
-            </LinearLayout>
-
-        </RelativeLayout>
+            android:layout_marginTop="5dp"/>
 
         <TextView
             android:id="@+id/txt_total_biaya"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat_bold"
-            android:textSize="20sp"
+            android:textSize="24sp"
             android:layout_marginTop="25dp"
-            android:text="TOTAL BIAYA : " />
+            android:layout_marginLeft="5dp"
+            android:text="TOTAL : " />
 
     </LinearLayout>
 

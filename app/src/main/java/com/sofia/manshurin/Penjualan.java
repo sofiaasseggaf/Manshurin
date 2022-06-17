@@ -5,21 +5,47 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sofia.manshurin.helper.DataHelper;
+import com.sofia.manshurin.model.ModelBarang;
+import com.sofia.manshurin.model.ModelKeranjang;
+import com.sofia.manshurin.model.ModelPenjualan;
+import com.sofia.manshurin.utility.PreferenceUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class Penjualan extends AppCompatActivity {
 
-    EditText txt_jml_barang, txt_harga_jual, txt_jumlah_katul, txt_harga_katul;
+    EditText txt_jml_barang, txt_harga_jual;
     Spinner sp_barang;
     TextView txt_total_biaya, txtload;
     ImageButton btn_masukkan_keranjang, btn_cek_keranjang;
+    DataHelper dbCenter;
+    List<ModelBarang> listModelBarang;
+    List<String> namaBarang = new ArrayList<>();
+    ArrayAdapter<String> adapter;
+    String nama, harga;
+    int id;
+    ModelBarang modelBarang;
+    List<ModelKeranjang> listModelKeranjang;
+    List<ModelPenjualan> listModelPenjualan;
+    Random rand;
+    int upperbound, id_penjualan, id_riwayat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,23 +54,49 @@ public class Penjualan extends AppCompatActivity {
 
         txt_jml_barang = findViewById(R.id.txt_jml_barang);
         txt_harga_jual = findViewById(R.id.txt_harga_jual);
-        txt_jumlah_katul = findViewById(R.id.txt_jumlah_katul);
-        txt_harga_katul = findViewById(R.id.txt_harga_katul);
         sp_barang = findViewById(R.id.sp_barang);
         txt_total_biaya = findViewById(R.id.txt_total_biaya);
         btn_masukkan_keranjang = findViewById(R.id.btn_masukkan_keranjang);
         btn_cek_keranjang = findViewById(R.id.btn_cek_keranjang);
         txtload = findViewById(R.id.textloading);
 
+        dbCenter = new DataHelper(this);
+        rand = new Random(); //instance of random class
+        upperbound = 1000000;
+        //generate random values from 0-1000000
+
         start();
 
-        // set on click ke spinner, ketika barang dipilih, get id, nama, dan harganya
+        sp_barang.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1,
+                                       int arg2, long arg3) {
+                if (namaBarang.size()>0){
+                    nama = sp_barang.getSelectedItem().toString();
+                    for (int a=0; a<listModelBarang.size(); a++){
+                        try {
+                            if (listModelBarang.get(a).getNama_barang().equalsIgnoreCase(nama)){
+                                id = listModelBarang.get(a).getId_barang();
+                                harga = listModelBarang.get(a).getHarga_barang();
+                                modelBarang = listModelBarang.get(a);
+                            }
+                        } catch (Exception e){}
+                    }
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) { }
+        });
 
         btn_masukkan_keranjang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // cek id, nama, harga, jumlah, harga katul, jumlah katul, total
-                simpan();
+                if (!nama.equalsIgnoreCase("") && !txt_jml_barang.getText().toString().equalsIgnoreCase("") &&
+                        !txt_harga_jual.getText().toString().equalsIgnoreCase("")){
+                    inputTransaksi();
+                } else {
+                    Toast.makeText(Penjualan.this, "Lengkapi Field", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -86,21 +138,64 @@ public class Penjualan extends AppCompatActivity {
     }
 
     private void getDataBarang(){
-        //get data barang dulu, kalo done baru gini
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                findViewById(R.id.framelayout).setVisibility(View.GONE);
-                setSpinner();
+        Log.d("DataBarang", "get all barang");
+        listModelBarang = dbCenter.getAllBarang();
+        if (listModelBarang.size()>0){
+            for (int i=0; i<listModelBarang.size(); i++){
+                namaBarang.add(listModelBarang.get(i).getNama_barang());
             }
-        });
+            if(namaBarang.size()>0){
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        findViewById(R.id.framelayout).setVisibility(View.GONE);
+                        setDataSpinner();
+                    }
+                });
+            }
+        } else {
+            findViewById(R.id.framelayout).setVisibility(View.GONE);
+            Toast.makeText(Penjualan.this, "Anda Belum Memiliki Barang", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private void setSpinner(){
-        // set spinner barang
+    private void setDataSpinner(){
+        adapter = new ArrayAdapter<String>(Penjualan.this, R.layout.z_spinner_list, namaBarang);
+        adapter.setDropDownViewResource(R.layout.z_spinner_list);
+        sp_barang.setAdapter(adapter);
+
+        if (PreferenceUtils.getIDRiwayat(getApplicationContext()).equalsIgnoreCase("")){
+            id_riwayat = rand.nextInt(upperbound);
+            PreferenceUtils.saveIDRiwayat(String.valueOf(id_riwayat), getApplicationContext());
+        } else {
+            // do nothing
+        }
     }
 
-    private void simpan(){
+    private void inputTransaksi(){
+        id_penjualan = rand.nextInt(upperbound);
+        SQLiteDatabase db = dbCenter.getWritableDatabase();
+        db.execSQL("insert into penjualan(id_penjualan, id_riwayat, id_barang, jumlah, harga) values('" +
+                id_penjualan + "','" +
+                id_riwayat + "','" +
+                id + "','" +
+                Integer.valueOf(txt_jml_barang.getText().toString()) + "','" +
+                txt_harga_jual.getText().toString() + "')");
+        masukkanKeranjang();
+    }
+
+    private void masukkanKeranjang(){
+        SQLiteDatabase db = dbCenter.getWritableDatabase();
+        db.execSQL("insert into keranjang(id_keranjang, id_transaksi) values('" +
+                1234 + "','" +
+                id_penjualan + "')");
+        Toast.makeText(getApplicationContext(), "Berhasil Masukkan Keranjang", Toast.LENGTH_SHORT).show();
+        //PenjualanKeranjang.dataMaster.getDataKeranjang();
+        txt_harga_jual.setText("");
+        txt_jml_barang.setText("");
+    }
+
+    private void back(){
         findViewById(R.id.framelayout).setVisibility(View.VISIBLE);
         final Handler handler = new Handler();
         Runnable runnable = new Runnable() {
@@ -123,22 +218,10 @@ public class Penjualan extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                masukkkanKeranjang();
+                listModelKeranjang = dbCenter.getAllKeranjang();
+                hapusDataPenjualan();
             }
         }).start();
-    }
-
-    private void masukkkanKeranjang(){
-        //simpan data barang ke table keranjang, kalo done baru gini
-        // pake int aja utk tau uda berapa kali, kaya int++
-        //nanti pas berhasil transaksi, data di table keranjang apus semua, kaya refresh gituwes
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                findViewById(R.id.framelayout).setVisibility(View.GONE);
-                Toast.makeText(Penjualan.this, "Berhasil Tambah Barang ke Keranjang", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void goToHome(){
@@ -153,14 +236,30 @@ public class Penjualan extends AppCompatActivity {
         finish();
     }
 
+    private void hapusDataPenjualan(){
+        // hapus semua data penjualan yg id nya ada dikeranjang
+        hapusDataKeranjang();
+    }
+
+    private void hapusDataKeranjang(){
+        // kalo udah, hapus semua data keranjang
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                findViewById(R.id.framelayout).setVisibility(View.GONE);
+                goToHome();
+            }
+        });
+    }
+
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Batalkan Transaksi Penjualan ?")
+        builder.setMessage("Batalkan Semua Transaksi Penjualan ?")
                 .setCancelable(false)
                 .setPositiveButton("YA", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
-                        goToHome();
+                        back();
                     }
                 })
 

@@ -20,6 +20,7 @@ import com.sofia.manshurin.model.ModelBarang;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class DataBarangEdit extends AppCompatActivity {
@@ -28,10 +29,10 @@ public class DataBarangEdit extends AppCompatActivity {
     ImageButton btn_simpan, btn_hapus;
     TextView txt_id_barang, txtload;
     ModelBarang modelBarang;
-    int id;
+    List<ModelBarang> listModelBarang;
+    int id, checkNama;
     DataHelper dbCenter;
-    String now;
-
+    String now, namaAwal, namaAkhir;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +60,7 @@ public class DataBarangEdit extends AppCompatActivity {
             public void onClick(View v) {
                 if(!txt_nama_barang.getText().toString().equalsIgnoreCase("") && !txt_harga_barang.getText().toString().equalsIgnoreCase("") &&
                         !txt_deskripsi_barang.getText().toString().equalsIgnoreCase("")){
-                    updateDataBarang();
+                    checkNama();
                 } else {
                     Toast.makeText(DataBarangEdit.this, "Lengkapi Field Terlebih Dahulu", Toast.LENGTH_SHORT).show();
                 }
@@ -107,9 +108,15 @@ public class DataBarangEdit extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                getDataBarangWithID(id);
+                getDataBarang();
             }
         }).start();
+    }
+
+    private void getDataBarang(){
+        Log.d("DataBarang", "get all barang");
+        listModelBarang = dbCenter.getAllBarang();
+        getDataBarangWithID(id);
     }
 
     private void getDataBarangWithID(int i){
@@ -127,10 +134,39 @@ public class DataBarangEdit extends AppCompatActivity {
     }
 
     private void setDataBarang(){
+        namaAwal = txt_nama_barang.getText().toString();
         txt_id_barang.setText(String.valueOf(modelBarang.getId_barang()));
         txt_nama_barang.setText(modelBarang.getNama_barang());
         txt_deskripsi_barang.setText(modelBarang.getDesk_barang());
         txt_harga_barang.setText(modelBarang.getHarga_barang());
+    }
+
+    private void checkNama(){
+        namaAkhir = txt_nama_barang.getText().toString();
+        if (namaAkhir.equalsIgnoreCase(namaAkhir)){
+            updateDataBarang();
+        } else {
+            if(listModelBarang.size()>0){
+                for(int i=0; i<listModelBarang.size(); i++){
+                    if(String.valueOf(listModelBarang.get(i).getNama_barang()).equalsIgnoreCase(namaAkhir)) {
+                        Toast.makeText(DataBarangEdit.this, "Nama Barang Sudah Terpakai", Toast.LENGTH_SHORT).show();
+                        checkNama = 1;
+                        break;
+                    }
+                }
+            } else {
+                updateDataBarang();
+            }
+        }
+
+
+        if (checkNama!=1){
+            checkNama=0;
+            updateDataBarang();
+        } else {
+            checkNama=0;
+        }
+
     }
 
     private void updateDataBarang(){
