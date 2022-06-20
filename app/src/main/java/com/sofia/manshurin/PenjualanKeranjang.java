@@ -25,6 +25,7 @@ import com.sofia.manshurin.utility.PreferenceUtils;
 import com.sofia.manshurin.utility.RecyclerItemClickListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -39,6 +40,7 @@ public class PenjualanKeranjang extends AppCompatActivity {
     List<ModelKeranjang> listModelKeranjang;
     List<ModelKeranjang> listModelKeranjang2;
     List<ModelPenjualan> listModelPenjualan;
+    List<ModelPenjualan> listModelPenjualan2 = new ArrayList<ModelPenjualan>();
     DataHelper dbCenter;
     AdapterKeranjangPenjualan itemList;
     String totalKatul, hutang, now;
@@ -110,13 +112,24 @@ public class PenjualanKeranjang extends AppCompatActivity {
 
     public void getDataPenjualan(){
         listModelPenjualan = dbCenter.getAllPenjualan();
-        if (listModelPenjualan.size()>0){
+        if(listModelPenjualan.size()>0) {
+            for (int i = 0; i < listModelKeranjang.size(); i++) {
+                for (int j = 0; j < listModelPenjualan.size(); j++) {
+                    if (listModelKeranjang.get(i).getId_traksaksi() == listModelPenjualan.get(j).getId_penjualan()) {
+                        listModelPenjualan2.add(listModelPenjualan.get(j));
+                    }
+                }
+            }
+        }
+
+        if (listModelPenjualan2.size() > 0) {
             setData();
         }
+
     }
 
     private void setData(){
-        itemList = new AdapterKeranjangPenjualan(listModelPenjualan);
+        itemList = new AdapterKeranjangPenjualan(listModelPenjualan2);
         rvKeranjangPenjualan.setLayoutManager(new LinearLayoutManager(PenjualanKeranjang.this));
         rvKeranjangPenjualan.setAdapter(itemList);
         rvKeranjangPenjualan.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), rvKeranjangPenjualan,

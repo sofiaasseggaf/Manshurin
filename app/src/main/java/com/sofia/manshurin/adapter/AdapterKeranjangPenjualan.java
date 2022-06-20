@@ -33,10 +33,10 @@ public class AdapterKeranjangPenjualan extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ((Penampung)holder).txt_nama_barang.setText(dataItemList.get(position).getId_barang());
-        ((Penampung)holder).txt_jml_jual.setText(dataItemList.get(position).getJumlah());
+        ((Penampung)holder).txt_nama_barang.setText(String.valueOf(dataItemList.get(position).getId_barang()));
+        ((Penampung)holder).txt_jml_jual.setText(String.valueOf(dataItemList.get(position).getJumlah()));
         int total = Integer.valueOf(dataItemList.get(position).getHarga()) * dataItemList.get(position).getJumlah();
-        ((Penampung)holder).txt_total_harga_jual.setText(total);
+        ((Penampung)holder).txt_total_harga_jual.setText(String.valueOf(total));
     }
 
     @Override

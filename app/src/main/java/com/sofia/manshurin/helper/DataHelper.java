@@ -50,7 +50,7 @@ public class DataHelper extends SQLiteOpenHelper {
         Log.d("Data", "onCreate : " + CREATE_TABLE_PENJUALAN);
         db.execSQL(CREATE_TABLE_PENJUALAN);
 
-        String CREATE_TABLE_KERANJANG = "create table keranjang(id_keranjang integer null, id_transaksi integer null);";
+        String CREATE_TABLE_KERANJANG = "create table keranjang(id_transaksi integer primary key, id_keranjang text null);";
         Log.d("Data", "onCreate : " + CREATE_TABLE_KERANJANG);
         db.execSQL(CREATE_TABLE_KERANJANG);
 
@@ -202,14 +202,14 @@ public class DataHelper extends SQLiteOpenHelper {
         List<ModelKeranjang> modelKeranjangList = new ArrayList<ModelKeranjang>();
         // Select All Query
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT  * FROM keranjang", null);
+        Cursor cursor = db.rawQuery("SELECT * FROM keranjang", null);
         cursor.moveToFirst();
         // Looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
                 ModelKeranjang keranjangModel = new ModelKeranjang(
                         cursor.getInt(0),
-                        cursor.getInt(1));
+                        cursor.getString(1));
                 modelKeranjangList.add(keranjangModel);
             } while (cursor.moveToNext());
         }

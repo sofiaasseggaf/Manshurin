@@ -2,18 +2,19 @@ package com.sofia.manshurin.model;
 
 public class ModelKeranjang {
 
-    int id_keranjang, id_traksaksi;
+    int id_traksaksi;
+    String id_keranjang;
 
-    public ModelKeranjang(int id_keranjang, int id_traksaksi) {
+    public ModelKeranjang(int id_traksaksi, String id_keranjang) {
         this.id_keranjang = id_keranjang;
         this.id_traksaksi = id_traksaksi;
     }
 
-    public int getId_keranjang() {
+    public String getId_keranjang() {
         return id_keranjang;
     }
 
-    public void setId_keranjang(int id_keranjang) {
+    public void setId_keranjang(String id_keranjang) {
         this.id_keranjang = id_keranjang;
     }
 

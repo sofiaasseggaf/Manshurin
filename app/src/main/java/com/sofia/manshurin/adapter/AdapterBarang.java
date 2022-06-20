@@ -33,8 +33,8 @@ public class AdapterBarang extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ((Penampung)holder).nama_barang.setText(dataItemList.get(position).getNama_barang());
-        ((Penampung)holder).harga_barang.setText(dataItemList.get(position).getHarga_barang());
-        ((Penampung)holder).stok_barang.setText(dataItemList.get(position).getDesk_barang());
+        ((Penampung)holder).harga_barang.setText("Harga : " + dataItemList.get(position).getHarga_barang());
+        ((Penampung)holder).stok_barang.setText("Jumlah : " + dataItemList.get(position).getJml_barang());
     }
 
     @Override

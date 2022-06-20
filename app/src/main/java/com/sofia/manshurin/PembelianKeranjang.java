@@ -136,7 +136,7 @@ public class PembelianKeranjang extends AppCompatActivity {
 
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Tambah Pembelian ?")
+        builder.setMessage("Batalkan Pembelian ?")
                 .setCancelable(false)
                 .setPositiveButton("YA", new DialogInterface.OnClickListener() {
                     @Override

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import com.sofia.manshurin.helper.DataHelper;
 import com.sofia.manshurin.model.ModelBarang;
+import com.sofia.manshurin.model.ModelKeranjang;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +40,8 @@ public class Pembelian extends AppCompatActivity {
     String nama, harga;
     int id;
     ModelBarang modelBarang;
+    List<ModelKeranjang> listModelKeranjang;
+    List<ModelKeranjang> listModelKeranjang2 = new ArrayList<ModelKeranjang>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +112,8 @@ public class Pembelian extends AppCompatActivity {
         btn_cek_keranjang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToKeranjang();
+                delAllKeranjang();
+                //goToKeranjang();
             }
         });
 
@@ -168,6 +173,29 @@ public class Pembelian extends AppCompatActivity {
         adapter = new ArrayAdapter<String>(Pembelian.this, R.layout.z_spinner_list, namaBarang);
         adapter.setDropDownViewResource(R.layout.z_spinner_list);
         sp_barang.setAdapter(adapter);
+    }
+
+
+    private void delAllKeranjang(){
+        listModelKeranjang = dbCenter.getAllKeranjang();
+        AlertDialog.Builder alert = new AlertDialog.Builder(Pembelian.this);
+        alert.setMessage("Hapus Semua Data Keranjang ?")
+                .setPositiveButton("Hapus", new DialogInterface.OnClickListener()                 {
+                    public void onClick(DialogInterface dialog, int which) {
+                        SQLiteDatabase db = dbCenter.getWritableDatabase();
+                        for(int i=0; i<listModelKeranjang.size(); i++){
+                            db.execSQL("delete from keranjang where id_keranjang = '"+listModelKeranjang.get(i).getId_keranjang()+"'");
+                            //db.execSQL("delete from keranjang where id_keranjang = '"+listModelKeranjang.get(i).getId_traksaksi()+"'");
+                        }
+                        listModelKeranjang2 = dbCenter.getAllKeranjang();
+                        if(listModelKeranjang2.size()==0){
+                            Toast.makeText(Pembelian.this, "Keranjang Kosong", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }).setNegativeButton("Cancel", null);
+
+        AlertDialog alert1 = alert.create();
+        alert1.show();
     }
 
     private void simpan(){
