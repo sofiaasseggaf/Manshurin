@@ -23,7 +23,7 @@ import android.widget.Toast;
 
 import com.sofia.manshurin.helper.DataHelper;
 import com.sofia.manshurin.model.ModelBarang;
-import com.sofia.manshurin.model.ModelKeranjang;
+import com.sofia.manshurin.model.ModelKranjang;
 import com.sofia.manshurin.model.ModelPenjualan;
 import com.sofia.manshurin.utility.PreferenceUtils;
 
@@ -41,12 +41,12 @@ public class Penjualan extends AppCompatActivity {
     List<ModelBarang> listModelBarang;
     List<String> namaBarang = new ArrayList<>();
     List<Integer> idtrans = new ArrayList<Integer>();
+    List<ModelKranjang> listModelKeranjang = new ArrayList<>();
+    List<ModelKranjang> listModelKeranjang2 = new ArrayList<>();
     ArrayAdapter<String> adapter;
     String nama, harga;
     int id;
     ModelBarang modelBarang;
-    List<ModelKeranjang> listModelKeranjang;
-    List<ModelKeranjang> listModelKeranjang2 = new ArrayList<ModelKeranjang>();
     List<ModelPenjualan> listModelPenjualan;
     Random rand;
     int upperbound, id_penjualan, id_riwayat, hrg, jml, total;
@@ -121,15 +121,13 @@ public class Penjualan extends AppCompatActivity {
         btn_masukkan_keranjang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!nama.equalsIgnoreCase("") && !txt_jml_barang.getText().toString().equalsIgnoreCase("") &&
+                if (txt_jml_barang.getText().toString().equalsIgnoreCase("0")) {
+                    Toast.makeText(Penjualan.this, "Jumlah Barang Tidak Boleh 0", Toast.LENGTH_SHORT).show();
+                } else if (!nama.equalsIgnoreCase("") && !txt_jml_barang.getText().toString().equalsIgnoreCase("") &&
                         !txt_harga_jual.getText().toString().equalsIgnoreCase("")){
                     inputTransaksi();
                 }  else {
                     Toast.makeText(Penjualan.this, "Lengkapi Field", Toast.LENGTH_SHORT).show();
-                }
-
-                if (txt_jml_barang.getText().toString().equalsIgnoreCase("0")) {
-                    Toast.makeText(Penjualan.this, "Jumlah Barang Tidak Boleh 0", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -220,84 +218,23 @@ public class Penjualan extends AppCompatActivity {
 
     private void masukkanKeranjang(){
         SQLiteDatabase db = dbCenter.getWritableDatabase();
-        db.execSQL("insert into keranjang(id_transaksi, id_keranjang) values('" +
+        db.execSQL("insert into kranjang(idtransaksi, idkranjang) values('" +
                 id_penjualan + "','" +
-                "12345" + "')");
+                12345 + "')");
         Toast.makeText(getApplicationContext(), "Berhasil Masukkan Keranjang", Toast.LENGTH_SHORT).show();
-        //PenjualanKeranjang.dataMaster.getDataKeranjang();
         txt_harga_jual.setText("");
         txt_jml_barang.setText("");
-    }
-
-    private void delAll(){
-        findViewById(R.id.framelayout).setVisibility(View.VISIBLE);
-        final Handler handler = new Handler();
-        Runnable runnable = new Runnable() {
-            int count = 0;
-            @Override
-            public void run() {
-                count++;
-                if (count == 1) {
-                    txtload.setText("Tunggu Sebentar Ya ."); }
-                else if (count == 2) {
-                    txtload.setText("Tunggu Sebentar Ya . ."); }
-                else if (count == 3) {
-                    txtload.setText("Tunggu Sebentar Ya . . ."); }
-                if (count == 3)
-                    count = 0;
-                handler.postDelayed(this, 1500);
-            }
-        };
-        handler.postDelayed(runnable, 1 * 1000);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                getDataKeranjang();
-            }
-        }).start();
-    }
-
-    public void getDataKeranjang(){
-        listModelKeranjang = dbCenter.getAllKeranjang();
-        if (listModelKeranjang.size()>0){
-            getDataPenjualan();
-        } else {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    findViewById(R.id.framelayout).setVisibility(View.GONE);
-                    Toast.makeText(Penjualan.this, "Tidak Memiliki Data Keranjang", Toast.LENGTH_SHORT).show();
-                    goToHome();
-                }
-            });
-        }
-    }
-
-    public void getDataPenjualan(){
-        listModelPenjualan = dbCenter.getAllPenjualan();
-        if (listModelPenjualan.size()>0){
-            hapusPenjualandanKeranjang();
-        } else {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    findViewById(R.id.framelayout).setVisibility(View.GONE);
-                    Toast.makeText(Penjualan.this, "Tidak Memiliki Data Penjualan", Toast.LENGTH_SHORT).show();
-                    goToHome();
-                }
-            });
-        }
     }
 
     private void hapusPenjualandanKeranjang(){
         SQLiteDatabase db = dbCenter.getWritableDatabase();
         for(int i=0; i<listModelKeranjang.size(); i++){
-            idtrans.add(listModelKeranjang.get(i).getId_traksaksi());
-            db.execSQL("delete from keranjang where id_keranjang = '"+listModelKeranjang.get(i).getId_keranjang()+"'");
-            //db.execSQL("delete from keranjang where id_transaksi = '"+listModelKeranjang.get(i).getId_traksaksi()+"'");
+            idtrans.add(listModelKeranjang.get(i).getIdtransaksi());
+            // kranjang(idtransaksi, idkranjang)
+            db.execSQL("delete from kranjang where idtransaksi = '"+listModelKeranjang.get(i).getIdtransaksi()+"'");
         }
-
-        listModelKeranjang2 = dbCenter.getAllKeranjang();
+        listModelKeranjang2 = dbCenter.getAllKranjang();
+        listModelPenjualan = dbCenter.getAllPenjualan();
         if(listModelKeranjang2.size()==0){
             for(int j=0; j<idtrans.size(); j++){
                 for(int i=0; i<listModelPenjualan.size(); i++){
@@ -311,6 +248,7 @@ public class Penjualan extends AppCompatActivity {
                 public void run() {
                     findViewById(R.id.framelayout).setVisibility(View.GONE);
                     Toast.makeText(Penjualan.this, "Transaksi Berhasil Dihapus", Toast.LENGTH_SHORT).show();
+                    idtrans.clear();
                     goToHome();
                 }
             });
@@ -340,12 +278,18 @@ public class Penjualan extends AppCompatActivity {
 
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Batalkan Semua Transaksi Penjualan ?")
+        builder.setMessage("Batalkan Semua Transaksi ?")
                 .setCancelable(false)
                 .setPositiveButton("YA", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
-                        delAll();
+                        listModelKeranjang = dbCenter.getAllKranjang();
+                        if (listModelKeranjang.size()>0){
+                            hapusPenjualandanKeranjang();
+                        } else {
+                            goToHome();
+                        }
+
                     }
                 })
 

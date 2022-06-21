@@ -1,11 +1,11 @@
 package com.sofia.manshurin.model;
 
-public class ModelRiwayat {
+public class ModelRiwayatPenjualan {
 
     int id_riwayat;
     String harga, harga_katul, jenis_pembayaran, tgl_input, tgl_update;
 
-    public ModelRiwayat(int id_riwayat, String harga, String harga_katul, String jenis_pembayaran, String tgl_input, String tgl_update) {
+    public ModelRiwayatPenjualan(int id_riwayat, String harga, String harga_katul, String jenis_pembayaran, String tgl_input, String tgl_update) {
         this.id_riwayat = id_riwayat;
         this.harga = harga;
         this.harga_katul = harga_katul;

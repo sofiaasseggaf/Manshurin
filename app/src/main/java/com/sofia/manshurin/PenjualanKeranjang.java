@@ -14,12 +14,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sofia.manshurin.adapter.AdapterBarang;
 import com.sofia.manshurin.adapter.AdapterKeranjangPenjualan;
 import com.sofia.manshurin.helper.DataHelper;
 import com.sofia.manshurin.model.ModelBarang;
-import com.sofia.manshurin.model.ModelKeranjang;
+import com.sofia.manshurin.model.ModelKranjang;
 import com.sofia.manshurin.model.ModelPenjualan;
 import com.sofia.manshurin.utility.PreferenceUtils;
 import com.sofia.manshurin.utility.RecyclerItemClickListener;
@@ -37,10 +38,9 @@ public class PenjualanKeranjang extends AppCompatActivity {
     TextView txt_total_biaya, txtload;
     EditText txt_jumlah_katul, txt_harga_katul;
     public static PenjualanKeranjang dataMaster;
-    List<ModelKeranjang> listModelKeranjang;
-    List<ModelKeranjang> listModelKeranjang2;
     List<ModelPenjualan> listModelPenjualan;
     List<ModelPenjualan> listModelPenjualan2 = new ArrayList<ModelPenjualan>();
+    List<ModelKranjang> listModelKeranjang = new ArrayList<>();
     DataHelper dbCenter;
     AdapterKeranjangPenjualan itemList;
     String totalKatul, hutang, now;
@@ -69,42 +69,14 @@ public class PenjualanKeranjang extends AppCompatActivity {
         btn_bayar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendDataRiwayatPenjualan();
+                //sendDataRiwayatPenjualan();
             }
         });
 
     }
 
-    /*private void start(){
-        findViewById(R.id.framelayout).setVisibility(View.VISIBLE);
-        final Handler handler = new Handler();
-        Runnable runnable = new Runnable() {
-            int count = 0;
-            @Override
-            public void run() {
-                count++;
-                if (count == 1) {
-                    txtload.setText("Tunggu Sebentar Ya ."); }
-                else if (count == 2) {
-                    txtload.setText("Tunggu Sebentar Ya . ."); }
-                else if (count == 3) {
-                    txtload.setText("Tunggu Sebentar Ya . . ."); }
-                if (count == 3)
-                    count = 0;
-                handler.postDelayed(this, 1500);
-            }
-        };
-        handler.postDelayed(runnable, 1 * 1000);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                getDataKeranjang();
-            }
-        }).start();
-    }*/
-
     public void getDataKeranjang(){
-        listModelKeranjang = dbCenter.getAllKeranjang();
+        listModelKeranjang = dbCenter.getAllKranjang();
         if (listModelKeranjang.size()>0){
             getDataPenjualan();
         }
@@ -115,7 +87,7 @@ public class PenjualanKeranjang extends AppCompatActivity {
         if(listModelPenjualan.size()>0) {
             for (int i = 0; i < listModelKeranjang.size(); i++) {
                 for (int j = 0; j < listModelPenjualan.size(); j++) {
-                    if (listModelKeranjang.get(i).getId_traksaksi() == listModelPenjualan.get(j).getId_penjualan()) {
+                    if (listModelKeranjang.get(i).getIdtransaksi() == listModelPenjualan.get(j).getId_penjualan()) {
                         listModelPenjualan2.add(listModelPenjualan.get(j));
                     }
                 }
@@ -167,12 +139,9 @@ public class PenjualanKeranjang extends AppCompatActivity {
     private void hapusPenjualandanKeranjang(int id){
         SQLiteDatabase db = dbCenter.getWritableDatabase();
         db.execSQL("delete from penjualan where id_penjualan = '"+id+"'");
-        for(int i=0; i<listModelKeranjang.size(); i++){
-            if(listModelKeranjang.get(i).getId_traksaksi()==id){
-                db.execSQL("delete from keranjang where id_keranjang = '"+listModelKeranjang.get(i).getId_keranjang()+"'");
-            }
-        }
-        getDataKeranjang();
+        db.execSQL("delete from kranjang where idtransaksi = '"+id+"'");
+        Toast.makeText(dataMaster, "Berhasil Hapus Data Transaksi", Toast.LENGTH_SHORT).show();
+        goToPenjualan();
     }
 
     private void sendDataRiwayatPenjualan(){
@@ -186,38 +155,8 @@ public class PenjualanKeranjang extends AppCompatActivity {
                 hutang +
                 now +
                 now +"')");
+        // HAPUS SEMUA ISI KERANJANG
         PreferenceUtils.saveIDRiwayat("", getApplicationContext());
-        hapusDataKeranjang();
-    }
-
-    private void hapusDataKeranjang(){
-        SQLiteDatabase db = dbCenter.getWritableDatabase();
-        for(int i=0; i<listModelKeranjang.size(); i++){
-            db.execSQL("delete from keranjang where id_keranjang = '"+listModelKeranjang.get(i).getId_keranjang()+"'");
-        }
-        listModelKeranjang2 = dbCenter.getAllKeranjang();
-        if (listModelKeranjang2.size()==0){
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(PenjualanKeranjang.this);
-            builder.setMessage("Pembayaran Berhasil")
-                    .setPositiveButton("Ke Riwayat Penjualan", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            Intent a = new Intent(PenjualanKeranjang.this, RiwayatPenjualan.class);
-                            startActivity(a);
-                            finish();
-                        }
-                    })
-                    .setNegativeButton("Kembali", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            goToPenjualan();
-                        }
-                    })
-                    .create()
-                    .show();
-
-        }
     }
 
     private void goToPenjualan(){
@@ -227,24 +166,7 @@ public class PenjualanKeranjang extends AppCompatActivity {
     }
 
     public void onBackPressed() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Tambah Penjualan ?")
-                .setCancelable(false)
-                .setPositiveButton("YA", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int i) {
-                        goToPenjualan();
-                    }
-                })
-
-                .setNegativeButton("TIDAK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int i) {
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog alertDialog =builder.create();
-        alertDialog.show();
+        goToPenjualan();
     }
 
 }

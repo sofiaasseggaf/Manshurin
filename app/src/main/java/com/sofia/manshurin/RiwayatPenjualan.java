@@ -1,6 +1,7 @@
 package com.sofia.manshurin;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -8,11 +9,28 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.sofia.manshurin.adapter.AdapterKeranjang;
+import com.sofia.manshurin.adapter.AdapterKeranjangPenjualan;
+import com.sofia.manshurin.adapter.AdapterRiwayatPenjualan;
+import com.sofia.manshurin.helper.DataHelper;
+import com.sofia.manshurin.model.ModelKranjang;
+import com.sofia.manshurin.model.ModelPenjualan;
+import com.sofia.manshurin.model.ModelRiwayatPenjualan;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RiwayatPenjualan extends AppCompatActivity {
 
     RecyclerView rvRiwayatPenjualan;
     TextView txtload;
+    DataHelper dbCenter;
+    List<ModelRiwayatPenjualan> listModelRiwayat = new ArrayList<ModelRiwayatPenjualan>();
+    List<ModelPenjualan> listModelPenjualan = new ArrayList<ModelPenjualan>();
+    AdapterRiwayatPenjualan itemList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +39,8 @@ public class RiwayatPenjualan extends AppCompatActivity {
 
         rvRiwayatPenjualan = findViewById(R.id.rvRiwayatPenjualan);
         txtload = findViewById(R.id.textloading);
+
+        dbCenter = new DataHelper(this);
 
         start();
 
@@ -55,18 +75,45 @@ public class RiwayatPenjualan extends AppCompatActivity {
     }
 
     private void getDataRiwayatPenjualan(){
-        //get data riwayat penjualan dulu, kalo done baru gini
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                findViewById(R.id.framelayout).setVisibility(View.GONE);
-                setData();
-            }
-        });
+        listModelRiwayat = dbCenter.getAllRiwayatPenjualan();
+        if(listModelRiwayat.size()>0){
+            getDataPenjualan();
+        } else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    findViewById(R.id.framelayout).setVisibility(View.GONE);
+                    Toast.makeText(RiwayatPenjualan.this, "Tidak Memiliki Riwayat Penjualan", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private void getDataPenjualan(){
+        listModelPenjualan = dbCenter.getAllPenjualan();
+        if(listModelPenjualan.size()>0){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    findViewById(R.id.framelayout).setVisibility(View.GONE);
+                    setData();
+                }
+            });
+        } else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    findViewById(R.id.framelayout).setVisibility(View.GONE);
+                    Toast.makeText(RiwayatPenjualan.this, "Tidak Memiliki Riwayat Penjualan", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     private void setData(){
-        // set data di recycle view
+        itemList = new AdapterRiwayatPenjualan(listModelRiwayat, listModelPenjualan, getApplicationContext());
+        rvRiwayatPenjualan.setLayoutManager(new LinearLayoutManager(RiwayatPenjualan.this));
+        rvRiwayatPenjualan.setAdapter(itemList);
     }
 
     private void goToHome(){

@@ -8,8 +8,9 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 import com.sofia.manshurin.model.ModelBarang;
-import com.sofia.manshurin.model.ModelKeranjang;
+import com.sofia.manshurin.model.ModelKranjang;
 import com.sofia.manshurin.model.ModelPenjualan;
+import com.sofia.manshurin.model.ModelRiwayatPenjualan;
 import com.sofia.manshurin.model.ModelSaldo;
 import com.sofia.manshurin.model.ModelUser;
 
@@ -18,7 +19,7 @@ import java.util.List;
 
 public class DataHelper extends SQLiteOpenHelper {
 
-    private  static final String DATABASE_NAME = "manshurin.db";
+    private  static final String DATABASE_NAME = "manshurin2.db";
     private static final int DATABASE_VERSION = 1;
 
     public DataHelper(@Nullable Context context) {
@@ -50,9 +51,9 @@ public class DataHelper extends SQLiteOpenHelper {
         Log.d("Data", "onCreate : " + CREATE_TABLE_PENJUALAN);
         db.execSQL(CREATE_TABLE_PENJUALAN);
 
-        String CREATE_TABLE_KERANJANG = "create table keranjang(id_transaksi integer primary key, id_keranjang text null);";
-        Log.d("Data", "onCreate : " + CREATE_TABLE_KERANJANG);
-        db.execSQL(CREATE_TABLE_KERANJANG);
+        String CREATE_TABLE_KRNJNG = "create table kranjang(idtransaksi integer primary key, idkranjang integer null);";
+        Log.d("Data", "onCreate : " + CREATE_TABLE_KRNJNG);
+        db.execSQL(CREATE_TABLE_KRNJNG);
 
         String CREATE_TABLE_RIWAYAT_PEMBELIAN = "create table riwayatpembelian(id_riwayat integer null, harga text null, harga_katul text null, jenis_pembayaran text null, tgl_input text null, tgl_update text null);";
         Log.d("Data", "onCreate : " + CREATE_TABLE_RIWAYAT_PEMBELIAN);
@@ -198,26 +199,6 @@ public class DataHelper extends SQLiteOpenHelper {
         return saldologged;
     }
 
-    public List<ModelKeranjang> getAllKeranjang() {
-        List<ModelKeranjang> modelKeranjangList = new ArrayList<ModelKeranjang>();
-        // Select All Query
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM keranjang", null);
-        cursor.moveToFirst();
-        // Looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                ModelKeranjang keranjangModel = new ModelKeranjang(
-                        cursor.getInt(0),
-                        cursor.getString(1));
-                modelKeranjangList.add(keranjangModel);
-            } while (cursor.moveToNext());
-        }
-
-        // return student list
-        return modelKeranjangList;
-    }
-
     public List<ModelPenjualan> getAllPenjualan() {
         List<ModelPenjualan> modelPenjualanList = new ArrayList<ModelPenjualan>();
         // Select All Query
@@ -239,6 +220,48 @@ public class DataHelper extends SQLiteOpenHelper {
 
         // return student list
         return modelPenjualanList;
+    }
+
+    public List<ModelKranjang> getAllKranjang(){
+        // kranjang(idtransaksi integer primary key, idkranjang integer null);";
+        List<ModelKranjang> modelKranjangList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM kranjang", null);
+        cursor.moveToFirst();
+        if (cursor.moveToFirst()) {
+            do {
+                ModelKranjang kranjangModel = new ModelKranjang(
+                        cursor.getInt(0),
+                        cursor.getInt(1));
+                modelKranjangList.add(kranjangModel);
+            } while (cursor.moveToNext());
+        }
+
+        return modelKranjangList;
+    }
+
+    public List<ModelRiwayatPenjualan> getAllRiwayatPenjualan(){
+        // riwayatpenjualan(id_riwayat integer null, harga text null,
+        // harga_katul text null, jenis_pembayaran text null, tgl_input text null, tgl_update text null);";
+
+        List<ModelRiwayatPenjualan> modelRiwayatPenjualanList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM riwayatpenjualan", null);
+        cursor.moveToFirst();
+        if (cursor.moveToFirst()) {
+            do {
+                ModelRiwayatPenjualan riwayatPenjualanModel = new ModelRiwayatPenjualan(
+                        cursor.getInt(0),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.getString(5));
+                modelRiwayatPenjualanList.add(riwayatPenjualanModel);
+            } while (cursor.moveToNext());
+        }
+
+        return modelRiwayatPenjualanList;
     }
 
     /*public List<BarangModel> getAllBarangFilter(String itemDecs) {

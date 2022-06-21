@@ -5,17 +5,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/rect_keranjang"
     android:orientation="vertical"
-    android:layout_marginBottom="10dp"
     android:padding="10dp">
-
-    <TextView
-        android:id="@+id/txt_nama_barang"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/comfortaa_medium"
-        android:text="Nama Barang"
-        android:textColor="@color/black"
-        android:textSize="14sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,7 +16,7 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/comfortaa_medium"
-            android:text="Jumlah Jual"
+            android:text="ID Transaksi"
             android:textColor="@color/black"
             android:textSize="14sp" />
         <TextView
@@ -37,7 +27,7 @@
             android:textColor="@color/black"
             android:textSize="14sp" />
         <TextView
-            android:id="@+id/txt_jml_jual"
+            android:id="@+id/txt_id_transaksi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/comfortaa_medium"
@@ -55,7 +45,7 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/comfortaa_medium"
-            android:text="Total Harga Jual"
+            android:text="ID Keranjang (12345)"
             android:textColor="@color/black"
             android:textSize="14sp" />
         <TextView
@@ -66,7 +56,7 @@
             android:textColor="@color/black"
             android:textSize="14sp" />
         <TextView
-            android:id="@+id/txt_total_harga_jual"
+            android:id="@+id/txt_id_keranjang"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/comfortaa_medium"

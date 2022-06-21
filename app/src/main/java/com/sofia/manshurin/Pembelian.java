@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.sofia.manshurin.helper.DataHelper;
 import com.sofia.manshurin.model.ModelBarang;
-import com.sofia.manshurin.model.ModelKeranjang;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +39,6 @@ public class Pembelian extends AppCompatActivity {
     String nama, harga;
     int id;
     ModelBarang modelBarang;
-    List<ModelKeranjang> listModelKeranjang;
-    List<ModelKeranjang> listModelKeranjang2 = new ArrayList<ModelKeranjang>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +109,7 @@ public class Pembelian extends AppCompatActivity {
         btn_cek_keranjang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                delAllKeranjang();
+                //delAllKeranjang();
                 //goToKeranjang();
             }
         });
@@ -176,7 +173,7 @@ public class Pembelian extends AppCompatActivity {
     }
 
 
-    private void delAllKeranjang(){
+  /*  private void delAllKeranjang(){
         listModelKeranjang = dbCenter.getAllKeranjang();
         AlertDialog.Builder alert = new AlertDialog.Builder(Pembelian.this);
         alert.setMessage("Hapus Semua Data Keranjang ?")
@@ -196,7 +193,7 @@ public class Pembelian extends AppCompatActivity {
 
         AlertDialog alert1 = alert.create();
         alert1.show();
-    }
+    }*/
 
     private void simpan(){
         findViewById(R.id.framelayout).setVisibility(View.VISIBLE);
