@@ -11,9 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.sofia.manshurin.adapter.AdapterBarang;
 import com.sofia.manshurin.adapter.AdapterBarangHome;
 import com.sofia.manshurin.helper.DataHelper;
 import com.sofia.manshurin.model.ModelBarang;
@@ -92,7 +90,7 @@ public class Home extends AppCompatActivity {
         btn_riwayat_pembelian.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent a = new Intent(Home.this, RiwayatPembelian.class);
+                Intent a = new Intent(Home.this, PembelianRiwayat.class);
                 startActivity(a);
                 finish();
             }
@@ -101,7 +99,7 @@ public class Home extends AppCompatActivity {
         btn_riwayat_penjualan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent a = new Intent(Home.this, RiwayatPenjualan.class);
+                Intent a = new Intent(Home.this, PenjualanRiwayat.class);
                 startActivity(a);
                 finish();
             }

@@ -12,21 +12,30 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sofia.manshurin.R;
-import com.sofia.manshurin.RiwayatPenjualan;
+import com.sofia.manshurin.model.ModelBarang;
 import com.sofia.manshurin.model.ModelPenjualan;
 import com.sofia.manshurin.model.ModelRiwayatPenjualan;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class AdapterRiwayatPenjualan extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     List<ModelRiwayatPenjualan> dataItemList;
     List<ModelPenjualan> dataPenjualan;
+    List<ModelPenjualan> dataPenjualan2 = new ArrayList<ModelPenjualan>();
+    List<ModelBarang> dataBarang = new ArrayList<ModelBarang>();
     Context context;
+    DecimalFormat formatter;
 
-    public AdapterRiwayatPenjualan(List<ModelRiwayatPenjualan> dataItemList,  List<ModelPenjualan> dataPenjualan, Context context) {
+    public AdapterRiwayatPenjualan(List<ModelRiwayatPenjualan> dataItemList, List<ModelPenjualan> dataPenjualan, List<ModelBarang> dataBarang, Context context) {
         this.dataItemList = dataItemList;
         this.dataPenjualan = dataPenjualan;
+        this.dataBarang  = dataBarang;
         this.context = context;
     }
 
@@ -41,12 +50,20 @@ public class AdapterRiwayatPenjualan extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ((Penampung)holder).tgl_pembelian.setText(dataItemList.get(position).getTgl_input());
-        ((Penampung)holder).total_pembelian.setText("TOTAL HARGA :" + dataItemList.get(position).getHarga());
+
+        int total = Integer.valueOf(dataItemList.get(position).getHarga());
+        String a = checkDesimal(String.valueOf(total));
+        ((Penampung)holder).total_pembelian.setText("Total Harga : Rp. " + a);
+
+
         for (int i=0; i<dataPenjualan.size(); i++){
-            AdapterListRiwayatPenjualan itemList = new AdapterListRiwayatPenjualan(dataPenjualan);
-            ((Penampung)holder).rv_list_riwayat.setLayoutManager(new LinearLayoutManager(context));
-            ((Penampung)holder).rv_list_riwayat.setAdapter(itemList);
+            if (dataPenjualan.get(i).getId_riwayat() == dataItemList.get(position).getId_riwayat()){
+                dataPenjualan2.add(dataPenjualan.get(i));
+            }
         }
+        AdapterRiwayatPenjualanList itemList = new AdapterRiwayatPenjualanList(dataPenjualan2, dataBarang);
+        ((Penampung)holder).rv_list_riwayat.setLayoutManager(new LinearLayoutManager(context));
+        ((Penampung)holder).rv_list_riwayat.setAdapter(itemList);
     }
 
     @Override
@@ -67,5 +84,21 @@ public class AdapterRiwayatPenjualan extends RecyclerView.Adapter<RecyclerView.V
         public void onClick(View v) {
             Log.d("onclick", "onClick " + getLayoutPosition() + " " + tgl_pembelian.getText());
         }
+    }
+
+    private String checkDesimal(String a){
+
+        formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+        DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance();
+        symbols.setGroupingSeparator('.');
+        symbols.setDecimalSeparator('.');
+        formatter = new DecimalFormat("###,###.##", symbols);
+
+        if(a!=null || !a.equalsIgnoreCase("")){
+            if(a.length()>3){
+                a = formatter.format(Double.valueOf(a));
+            }
+        }
+        return a;
     }
 }

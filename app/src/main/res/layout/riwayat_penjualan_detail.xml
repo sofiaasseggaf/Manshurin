@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bg_home"
+    android:padding="30dp">
+
+    <TextView
+        android:id="@+id/tgl_penjualan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/comfortaa_medium"
+        android:textColor="@color/bluetext"
+        android:text="12/12/12"
+        android:textSize="16sp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_list_riwayat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/txt_total_katul"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total Katul :"
+        android:fontFamily="@font/comfortaa_medium"
+        android:textColor="@color/bluetext"
+        android:layout_marginTop="20dp"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/txt_hutang"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hutang :"
+        android:fontFamily="@font/comfortaa_medium"
+        android:textColor="@color/bluetext"
+        android:layout_marginTop="10dp"
+        android:textSize="16sp"/>
+    <TextView
+        android:id="@+id/txt_total_biaya"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total Biaya :"
+        android:fontFamily="@font/comfortaa_medium"
+        android:textColor="@color/bluetext"
+        android:layout_marginTop="10dp"
+        android:textSize="16sp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+
+        <Button
+            android:id="@+id/btn_cetak"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CETAK"
+            android:backgroundTint="@color/darktext"
+            android:textSize="18sp"
+            android:fontFamily="@font/montserrat_bold"
+            android:textColor="@color/white"/>
+
+        <Button
+            android:id="@+id/btn_hapus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HAPUS"
+            android:backgroundTint="@color/darktext"
+            android:textSize="18sp"
+            android:layout_marginLeft="30dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:textColor="@color/white"/>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

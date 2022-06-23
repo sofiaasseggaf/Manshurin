@@ -1,31 +1,22 @@
 package com.sofia.manshurin;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sofia.manshurin.adapter.AdapterKeranjang;
 import com.sofia.manshurin.adapter.AdapterKeranjangPenjualan;
 import com.sofia.manshurin.helper.DataHelper;
-import com.sofia.manshurin.model.ModelBarang;
 import com.sofia.manshurin.model.ModelKranjang;
 import com.sofia.manshurin.model.ModelPenjualan;
-import com.sofia.manshurin.utility.RecyclerItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RiwayatPembelian extends AppCompatActivity {
+public class PembelianRiwayat extends AppCompatActivity {
 
     RecyclerView rvRiwayatPembelian, rvRiwayatPembelian2;
     TextView txtload;
@@ -46,39 +37,11 @@ public class RiwayatPembelian extends AppCompatActivity {
 
         dbCenter = new DataHelper(this);
 
-        start();
+        getDataRiwayatPembelian();
 
     }
 
-    private void start(){
-        findViewById(R.id.framelayout).setVisibility(View.VISIBLE);
-        final Handler handler = new Handler();
-        Runnable runnable = new Runnable() {
-            int count = 0;
-            @Override
-            public void run() {
-                count++;
-                if (count == 1) {
-                    txtload.setText("Tunggu Sebentar Ya ."); }
-                else if (count == 2) {
-                    txtload.setText("Tunggu Sebentar Ya . ."); }
-                else if (count == 3) {
-                    txtload.setText("Tunggu Sebentar Ya . . ."); }
-                if (count == 3)
-                    count = 0;
-                handler.postDelayed(this, 1500);
-            }
-        };
-        handler.postDelayed(runnable, 1 * 1000);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //getDataKeranjang();
-                //getDataPenjualan();
-                //getDataRiwayatPembelian();
-            }
-        }).start();
-    }
+
 
     /*private void getDataPenjualan(){
         listModelPenjualan = dbCenter.getAllPenjualan();
@@ -169,13 +132,7 @@ public class RiwayatPembelian extends AppCompatActivity {
 
     private void getDataRiwayatPembelian(){
         //get data riwayat pembelian dulu, kalo done baru gini
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                findViewById(R.id.framelayout).setVisibility(View.GONE);
-                setData();
-            }
-        });
+        setData();
     }
 
     private void setData(){
@@ -183,7 +140,7 @@ public class RiwayatPembelian extends AppCompatActivity {
     }
 
     private void goToHome(){
-        Intent a = new Intent(RiwayatPembelian.this, Home.class);
+        Intent a = new Intent(PembelianRiwayat.this, Home.class);
         startActivity(a);
         finish();
     }

@@ -83,7 +83,7 @@ public class Penjualan extends AppCompatActivity {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (txt_jml_barang.getText().toString().equalsIgnoreCase("")){
-                    txt_total_biaya.setText(" ");
+                    txt_total_biaya.setText("Total Biaya : -");
                 }
             }
 
@@ -219,7 +219,7 @@ public class Penjualan extends AppCompatActivity {
         SQLiteDatabase db = dbCenter.getWritableDatabase();
         db.execSQL("insert into penjualan(id_penjualan, id_riwayat, id_barang, jumlah, harga) values('" +
                 id_penjualan + "','" +
-                id_riwayat + "','" +
+                Integer.valueOf(PreferenceUtils.getIDRiwayat(getApplicationContext())) + "','" +
                 id + "','" +
                 Integer.valueOf(txt_jml_barang.getText().toString()) + "','" +
                 txt_harga_jual.getText().toString().replaceAll("[^0-9]", "") + "')");

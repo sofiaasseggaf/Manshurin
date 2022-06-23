@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Manshurin">
         <activity
+            android:name=".PenjualanRiwayatDetail"
+            android:exported="false" />
+        <activity
             android:name=".PenjualanKeranjang"
             android:exported="false" />
         <activity
@@ -28,10 +31,10 @@
             android:name=".DataBarangInput"
             android:exported="false" />
         <activity
-            android:name=".RiwayatPenjualan"
+            android:name=".PenjualanRiwayat"
             android:exported="false" />
         <activity
-            android:name=".RiwayatPembelian"
+            android:name=".PembelianRiwayat"
             android:exported="false" />
         <activity
             android:name=".Penjualan"

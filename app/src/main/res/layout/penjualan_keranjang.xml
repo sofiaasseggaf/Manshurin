@@ -67,42 +67,13 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:id="@+id/ll"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:text="Jumlah Katul"
-                    android:textColor="@color/darktext"
-                    android:textSize="14sp" />
-
-                <EditText
-                    android:id="@+id/txt_jumlah_katul"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@drawable/rect_jml_katul"
-                    android:fontFamily="@font/montserrat_bold"
-                    android:inputType="number"
-                    android:lines="3"
-                    android:paddingLeft="10dp"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
-            </LinearLayout>
+            android:layout_marginTop="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_toRightOf="@id/ll"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@id/ll"
                 android:orientation="vertical">
 
                 <TextView
@@ -116,12 +87,39 @@
                 <EditText
                     android:id="@+id/txt_harga_katul"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="48dp"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/rect_harga_katul"
                     android:fontFamily="@font/montserrat_bold"
                     android:inputType="number"
-                    android:lines="3"
+                    android:paddingLeft="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:text="Jumlah Katul"
+                    android:textColor="@color/darktext"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/txt_jumlah_katul"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/rect_jml_katul"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:inputType="number"
                     android:paddingLeft="10dp"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
@@ -143,26 +141,33 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:orientation="vertical">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <CheckBox
-                    android:id="@+id/checkBox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
+                <RadioButton
+                    android:id="@+id/rb_hutang_plus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="Hutang +"
                     android:fontFamily="@font/montserrat_bold"
-                    android:text="Pinjaman"
-                    android:textColor="@color/darktext"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:textColor="@color/darktext"/>
+
+                <RadioButton
+                    android:id="@+id/rb_hutang_min"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="Hutang -"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:textSize="14sp"
+                    android:textColor="@color/darktext"/>
+
             </LinearLayout>
 
             <EditText
@@ -172,9 +177,11 @@
                 android:background="@drawable/rect_edittext"
                 android:fontFamily="@font/montserrat_bold"
                 android:inputType="number"
+                android:minHeight="48dp"
                 android:paddingLeft="5dp"
                 android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                tools:ignore="SpeakableTextPresentCheck" />
 
         </LinearLayout>
 
@@ -195,11 +202,12 @@
         android:id="@+id/btn_bayar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/btn_bayar"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="30dp"/>
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/btn_bayar"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <FrameLayout
         android:id="@+id/framelayout"

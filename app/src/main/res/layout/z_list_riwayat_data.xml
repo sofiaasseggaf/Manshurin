@@ -5,24 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:padding="5dp"
-    android:layout_marginBottom="5dp"
+    android:layout_marginBottom="3dp"
     android:weightSum="9">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="2">
+
         <TextView
             android:id="@+id/nama_barang"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Barang 1"
-            android:fontFamily="@font/comfortaa_medium"
-            android:textColor="@color/bluetext"
-            android:layout_marginTop="10dp"
             android:layout_centerVertical="true"
-            android:textSize="16sp"/>
+            android:fontFamily="@font/comfortaa_medium"
+            android:text="Barang 1"
+            android:textColor="@color/bluetext"
+            android:textSize="16sp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -36,7 +35,6 @@
             android:text="3"
             android:fontFamily="@font/comfortaa_medium"
             android:textColor="@color/bluetext"
-            android:layout_marginTop="10dp"
             android:layout_centerVertical="true"
             android:textSize="16sp"/>
     </RelativeLayout>
@@ -52,7 +50,6 @@
             android:text="30.000"
             android:fontFamily="@font/comfortaa_medium"
             android:textColor="@color/bluetext"
-            android:layout_marginTop="10dp"
             android:layout_centerVertical="true"
             android:textSize="16sp"/>
     </RelativeLayout>

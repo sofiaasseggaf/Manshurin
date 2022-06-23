@@ -264,6 +264,37 @@ public class DataHelper extends SQLiteOpenHelper {
         return modelRiwayatPenjualanList;
     }
 
+
+    //get riwayat penjualan with id
+    public ModelRiwayatPenjualan getRiwayatPenjualan(int id_riwayat_penjualan) {
+
+        // riwayatpenjualan(id_riwayat integer null, harga text null,
+        // harga_katul text null, jenis_pembayaran text null, tgl_input text null, tgl_update text null);";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM riwayatpenjualan WHERE id_riwayat = '" + id_riwayat_penjualan + "'", null);
+        String[] rpenjualan = new String[cursor.getCount()];
+        cursor.moveToFirst();
+        for (int cc=0; cc < cursor.getCount(); cc++) {
+            cursor.moveToPosition(cc);
+            rpenjualan[cc] = cursor.getString(0).toString();
+        }
+        ModelRiwayatPenjualan rpenjualanLogged = new ModelRiwayatPenjualan(
+                cursor.getInt(0),
+                cursor.getString(1),
+                cursor.getString(2),
+                cursor.getString(3),
+                cursor.getString(4),
+                cursor.getString(5));
+
+        //Return Riwayat Penjualan
+        return rpenjualanLogged;
+    }
+
+
+
+
+
     /*public List<BarangModel> getAllBarangFilter(String itemDecs) {
         List<BarangModel> barangModelListFiltered = new ArrayList<BarangModel>();
         // Select All Query
