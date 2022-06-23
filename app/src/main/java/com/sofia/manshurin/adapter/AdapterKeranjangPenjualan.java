@@ -10,16 +10,24 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sofia.manshurin.R;
+import com.sofia.manshurin.model.ModelBarang;
 import com.sofia.manshurin.model.ModelPenjualan;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class AdapterKeranjangPenjualan extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     List<ModelPenjualan> dataItemList;
+    List<ModelBarang> dataBarang;
+    DecimalFormat formatter;
 
-    public AdapterKeranjangPenjualan(List<ModelPenjualan> dataItemList) {
+    public AdapterKeranjangPenjualan(List<ModelPenjualan> dataItemList, List<ModelBarang> dataBarang) {
         this.dataItemList = dataItemList;
+        this.dataBarang = dataBarang;
     }
 
     @NonNull
@@ -32,10 +40,11 @@ public class AdapterKeranjangPenjualan extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ((Penampung)holder).txt_nama_barang.setText(String.valueOf(dataItemList.get(position).getId_barang()));
+        ((Penampung)holder).txt_nama_barang.setText(dataBarang.get(position).getNama_barang());
         ((Penampung)holder).txt_jml_jual.setText(String.valueOf(dataItemList.get(position).getJumlah()));
         int total = Integer.valueOf(dataItemList.get(position).getHarga()) * dataItemList.get(position).getJumlah();
-        ((Penampung)holder).txt_total_harga_jual.setText(String.valueOf(total));
+        String a = checkDesimal(String.valueOf(total));
+        ((Penampung)holder).txt_total_harga_jual.setText(a);
     }
 
     @Override
@@ -56,4 +65,21 @@ public class AdapterKeranjangPenjualan extends RecyclerView.Adapter<RecyclerView
             Log.d("onclick", "onClick " + getLayoutPosition() + " " + txt_nama_barang.getText());
         }
     }
+
+    private String checkDesimal(String a){
+
+        formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+        DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance();
+        symbols.setGroupingSeparator('.');
+        symbols.setDecimalSeparator('.');
+        formatter = new DecimalFormat("###,###.##", symbols);
+
+        if(a!=null || !a.equalsIgnoreCase("")){
+            if(a.length()>3){
+                a = formatter.format(Double.valueOf(a));
+            }
+        }
+        return a;
+    }
+
 }

@@ -1,10 +1,13 @@
 package com.sofia.manshurin;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -14,8 +17,10 @@ import android.widget.Toast;
 import com.sofia.manshurin.adapter.AdapterKeranjang;
 import com.sofia.manshurin.adapter.AdapterKeranjangPenjualan;
 import com.sofia.manshurin.helper.DataHelper;
+import com.sofia.manshurin.model.ModelBarang;
 import com.sofia.manshurin.model.ModelKranjang;
 import com.sofia.manshurin.model.ModelPenjualan;
+import com.sofia.manshurin.utility.RecyclerItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,14 +73,14 @@ public class RiwayatPembelian extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                getDataKeranjang();
-                getDataPenjualan();
+                //getDataKeranjang();
+                //getDataPenjualan();
                 //getDataRiwayatPembelian();
             }
         }).start();
     }
 
-    private void getDataPenjualan(){
+    /*private void getDataPenjualan(){
         listModelPenjualan = dbCenter.getAllPenjualan();
         if(listModelPenjualan.size()>0){
             runOnUiThread(new Runnable() {
@@ -97,9 +102,42 @@ public class RiwayatPembelian extends AppCompatActivity {
     }
 
     private void setData(){
-        itemList = new AdapterKeranjangPenjualan(listModelPenjualan);
+        List<ModelBarang> listModelBarang = dbCenter.getAllBarang();
+        itemList = new AdapterKeranjangPenjualan(listModelPenjualan, listModelBarang);
         rvRiwayatPembelian.setLayoutManager(new LinearLayoutManager(RiwayatPembelian.this));
         rvRiwayatPembelian.setAdapter(itemList);
+        rvRiwayatPembelian.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), rvRiwayatPembelian,
+                new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int posisi) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(RiwayatPembelian.this);
+                        builder.setMessage("Hapus Item ?")
+                                .setCancelable(true)
+                                .setPositiveButton("YA", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int i) {
+                                        int idp = listModelPenjualan.get(posisi).getId_penjualan();
+                                        SQLiteDatabase db = dbCenter.getWritableDatabase();
+                                        db.execSQL("delete from penjualan where id_penjualan = '"+idp+"'");
+                                        goToHome();
+                                    }
+                                })
+
+                                .setNegativeButton("TIDAK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int i) {
+                                        dialog.cancel();
+                                    }
+                                });
+                        AlertDialog alertDialog =builder.create();
+                        alertDialog.show();
+                    }
+
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+
+                    }
+                }));
     }
 
     private void getDataKeranjang(){
@@ -127,7 +165,7 @@ public class RiwayatPembelian extends AppCompatActivity {
         itemList2 = new AdapterKeranjang(listModelKeranjang);
         rvRiwayatPembelian2.setLayoutManager(new LinearLayoutManager(RiwayatPembelian.this));
         rvRiwayatPembelian2.setAdapter(itemList2);
-    }
+    }*/
 
     private void getDataRiwayatPembelian(){
         //get data riwayat pembelian dulu, kalo done baru gini
@@ -140,9 +178,9 @@ public class RiwayatPembelian extends AppCompatActivity {
         });
     }
 
-   /* private void setData(){
+    private void setData(){
         // set data di recycle view
-    }*/
+    }
 
     private void goToHome(){
         Intent a = new Intent(RiwayatPembelian.this, Home.class);

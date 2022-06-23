@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -25,6 +26,9 @@ import com.sofia.manshurin.model.ModelPenjualan;
 import com.sofia.manshurin.utility.PreferenceUtils;
 import com.sofia.manshurin.utility.RecyclerItemClickListener;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,9 +45,12 @@ public class PenjualanKeranjang extends AppCompatActivity {
     List<ModelPenjualan> listModelPenjualan;
     List<ModelPenjualan> listModelPenjualan2 = new ArrayList<ModelPenjualan>();
     List<ModelKranjang> listModelKeranjang = new ArrayList<>();
+    List<ModelBarang> listModelBarang;
+    List<ModelBarang> listModelBarang2 = new ArrayList<ModelBarang>();
     DataHelper dbCenter;
     AdapterKeranjangPenjualan itemList;
     String totalKatul, hutang, now;
+    DecimalFormat formatter;
 
 
     @Override
@@ -95,13 +102,32 @@ public class PenjualanKeranjang extends AppCompatActivity {
         }
 
         if (listModelPenjualan2.size() > 0) {
+            getDataBarang();
+        }
+
+    }
+
+    private void getDataBarang(){
+        Log.d("DataBarang", "get all barang");
+        listModelBarang = dbCenter.getAllBarang();
+        if (listModelBarang.size()>0){
+            for(int i=0; i<listModelPenjualan2.size(); i++){
+                for (int j=0; j<listModelBarang.size(); j++){
+                    if (listModelPenjualan2.get(i).getId_barang() == listModelBarang.get(j).getId_barang()) {
+                        listModelBarang2.add(listModelBarang.get(j));
+                    }
+                }
+            }
+        }
+
+        if (listModelBarang2.size()>0){
             setData();
         }
 
     }
 
     private void setData(){
-        itemList = new AdapterKeranjangPenjualan(listModelPenjualan2);
+        itemList = new AdapterKeranjangPenjualan(listModelPenjualan2, listModelBarang2);
         rvKeranjangPenjualan.setLayoutManager(new LinearLayoutManager(PenjualanKeranjang.this));
         rvKeranjangPenjualan.setAdapter(itemList);
         rvKeranjangPenjualan.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), rvKeranjangPenjualan,
@@ -114,7 +140,7 @@ public class PenjualanKeranjang extends AppCompatActivity {
                                 .setPositiveButton("YA", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int i) {
-                                        int idp = listModelPenjualan.get(posisi).getId_penjualan();
+                                        int idp = listModelPenjualan2.get(posisi).getId_penjualan();
                                         hapusPenjualandanKeranjang(idp);
                                     }
                                 })
@@ -134,6 +160,37 @@ public class PenjualanKeranjang extends AppCompatActivity {
 
                     }
                 }));
+
+        hitungTotal();
+
+    }
+
+    private void hitungTotal(){
+        List<Integer> list = new ArrayList<Integer>();
+        list.clear();
+        for (int i=0; i<listModelPenjualan2.size(); i++){
+            int harga = Integer.valueOf(listModelPenjualan2.get(i).getHarga());
+            int jml = listModelPenjualan2.get(i).getJumlah();
+            int total = harga*jml;
+            list.add(total);
+        }
+
+        /*if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            sum = list.stream().mapToInt(Integer::intValue).sum();
+        }
+        txt_total_biaya.setText("TOTAL BIAYA : "+String.valueOf(sum));*/
+
+
+        int sum = 0;
+        for (int x : list) {
+            sum += x;
+        }
+
+        //txt_total_biaya.setText("TOTAL BIAYA : "+String.valueOf(sum));
+
+        String a = checkDesimal(String.valueOf(sum));
+        txt_total_biaya.setText("Total Biaya : " + a);
+
     }
 
     private void hapusPenjualandanKeranjang(int id){
@@ -157,6 +214,22 @@ public class PenjualanKeranjang extends AppCompatActivity {
                 now +"')");
         // HAPUS SEMUA ISI KERANJANG
         PreferenceUtils.saveIDRiwayat("", getApplicationContext());
+    }
+
+    private String checkDesimal(String a){
+
+        formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+        DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance();
+        symbols.setGroupingSeparator('.');
+        symbols.setDecimalSeparator('.');
+        formatter = new DecimalFormat("###,###.##", symbols);
+
+        if(a!=null || !a.equalsIgnoreCase("")){
+            if(a.length()>3){
+                a = formatter.format(Double.valueOf(a));
+            }
+        }
+        return a;
     }
 
     private void goToPenjualan(){

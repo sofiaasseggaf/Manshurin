@@ -25,10 +25,15 @@ import com.sofia.manshurin.helper.DataHelper;
 import com.sofia.manshurin.model.ModelBarang;
 import com.sofia.manshurin.model.ModelKranjang;
 import com.sofia.manshurin.model.ModelPenjualan;
+import com.sofia.manshurin.utility.NumberTextWatcher;
 import com.sofia.manshurin.utility.PreferenceUtils;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 public class Penjualan extends AppCompatActivity {
@@ -50,6 +55,7 @@ public class Penjualan extends AppCompatActivity {
     List<ModelPenjualan> listModelPenjualan;
     Random rand;
     int upperbound, id_penjualan, id_riwayat, hrg, jml, total;
+    DecimalFormat formatter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +77,8 @@ public class Penjualan extends AppCompatActivity {
 
         start();
 
+        txt_harga_jual.addTextChangedListener(new NumberTextWatcher(txt_harga_jual));
+
         txt_jml_barang.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -84,7 +92,7 @@ public class Penjualan extends AppCompatActivity {
                 try{
                     if (!txt_jml_barang.getText().toString().equalsIgnoreCase("")&
                             !txt_harga_jual.getText().toString().equalsIgnoreCase("")){
-                        hrg = Integer.valueOf(txt_harga_jual.getText().toString());
+                        hrg = Integer.valueOf(txt_harga_jual.getText().toString().replaceAll("[^0-9]", ""));
                         jml = Integer.valueOf(txt_jml_barang.getText().toString());
                     }
                 }catch (Exception e){}
@@ -93,7 +101,9 @@ public class Penjualan extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 total = hrg*jml;
-                txt_total_biaya.setText(String.valueOf(total));
+                //txt_total_biaya.setText(String.valueOf(total));
+                String a = checkDesimal(String.valueOf(total));
+                txt_total_biaya.setText("Total : " + a);
             }
         });
 
@@ -212,7 +222,7 @@ public class Penjualan extends AppCompatActivity {
                 id_riwayat + "','" +
                 id + "','" +
                 Integer.valueOf(txt_jml_barang.getText().toString()) + "','" +
-                txt_harga_jual.getText().toString() + "')");
+                txt_harga_jual.getText().toString().replaceAll("[^0-9]", "") + "')");
         masukkanKeranjang();
     }
 
@@ -262,6 +272,22 @@ public class Penjualan extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private String checkDesimal(String a){
+
+        formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+        DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance();
+        symbols.setGroupingSeparator('.');
+        symbols.setDecimalSeparator('.');
+        formatter = new DecimalFormat("###,###.##", symbols);
+
+        if(a!=null || !a.equalsIgnoreCase("")){
+            if(a.length()>3){
+                a = formatter.format(Double.valueOf(a));
+            }
+        }
+        return a;
     }
 
     private void goToHome(){

@@ -33,7 +33,7 @@ public class AdapterKeranjang extends RecyclerView.Adapter<RecyclerView.ViewHold
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
                 ((Penampung)holder).txt_id_transaksi.setText(String.valueOf(dataItemList.get(position).getIdtransaksi()));
-                ((Penampung)holder).txt_id_keranjang.setText(dataItemList.get(position).getIdkranjang());
+                ((Penampung)holder).txt_id_keranjang.setText(String.valueOf(dataItemList.get(position).getIdkranjang()));
         }
 
         @Override
