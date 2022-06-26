@@ -4,8 +4,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:layout_marginBottom="3dp"
+    android:background="@color/darktext"
+    android:layout_margin="10dp"
     android:weightSum="9">
 
     <RelativeLayout
@@ -15,12 +15,11 @@
 
         <TextView
             android:id="@+id/nama_barang"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:fontFamily="@font/comfortaa_medium"
-            android:text="Barang 1"
-            android:textColor="@color/bluetext"
+            android:textColor="@color/white"
             android:textSize="14sp" />
     </RelativeLayout>
 
@@ -29,14 +28,14 @@
         android:layout_height="wrap_content"
         android:layout_weight="4">
 
-        <TextView
+        <EditText
             android:id="@+id/jumlah_barang"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:fontFamily="@font/comfortaa_medium"
-            android:text="3"
-            android:textColor="@color/bluetext"
+            android:inputType="number"
+            android:textColor="@color/white"
             android:textSize="14sp" />
     </RelativeLayout>
 
@@ -44,15 +43,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="3">
+
         <TextView
             android:id="@+id/harga_barang"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="30.000"
-            android:fontFamily="@font/comfortaa_medium"
-            android:textColor="@color/bluetext"
             android:layout_centerVertical="true"
-            android:textSize="14sp"/>
+            android:fontFamily="@font/comfortaa_medium"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
     </RelativeLayout>
 
 </LinearLayout>

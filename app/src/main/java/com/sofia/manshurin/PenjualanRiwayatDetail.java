@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ import com.sofia.manshurin.helper.DataHelper;
 import com.sofia.manshurin.model.ModelBarang;
 import com.sofia.manshurin.model.ModelPenjualan;
 import com.sofia.manshurin.model.ModelRiwayatPenjualan;
+import com.sofia.manshurin.utility.RecyclerItemClickListener;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -162,6 +164,46 @@ public class PenjualanRiwayatDetail extends AppCompatActivity {
         AdapterRiwayatPenjualanList itemList = new AdapterRiwayatPenjualanList(listModelPenjualan2, listModelBarang2);
         rv_list_riwayat.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         rv_list_riwayat.setAdapter(itemList);
+        rv_list_riwayat.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), rv_list_riwayat,
+                new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        // alert dialog with edittext
+                        AlertDialog.Builder builder = new AlertDialog.Builder(PenjualanRiwayatDetail.this);
+                        View v = getLayoutInflater().inflate(R.layout.z_list_riwayat_data_update, null);
+                        TextView nama_barang = v.findViewById(R.id.nama_barang);
+                        EditText jumlah_barang = v.findViewById(R.id.jumlah_barang);
+                        TextView harga_barang = v.findViewById(R.id.harga_barang);
+                        builder.setView(v);
+                        nama_barang.setText(listModelBarang2.get(position).getNama_barang());
+                        jumlah_barang.setText(String.valueOf(listModelPenjualan2.get(position).getJumlah()));
+                        harga_barang.setText(listModelPenjualan2.get(position).getHarga());
+                        builder.setMessage("Edit Transaksi ?")
+                                .setCancelable(true)
+                                .setPositiveButton("SIMPAN", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int i) {
+                                        // UPDATE DATA TRANSAKSI DAN TOTAL RIWAYAT TRANSAKSI
+                                        Toast.makeText(getApplicationContext(), "update data transaksi ini " +
+                                                listModelBarang2.get(position).getNama_barang(), Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+
+                                .setNegativeButton("TIDAK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int i) {
+                                        dialog.cancel();
+                                    }
+                                });
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                    }
+
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+
+                    }
+                }));
     }
 
     private void cetak(){

@@ -1,9 +1,11 @@
 package com.sofia.manshurin;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -170,4 +172,26 @@ public class Home extends AppCompatActivity {
                 }));
     }
 
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Tutup Aplikasi ?")
+                .setCancelable(false)
+                .setPositiveButton("YA", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        finish();
+                        finishAffinity();
+                    }
+                })
+
+                .setNegativeButton("TIDAK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alertDialog =builder.create();
+        alertDialog.show();
+    }
 }

@@ -17,7 +17,11 @@ import android.widget.Toast;
 
 import com.sofia.manshurin.helper.DataHelper;
 import com.sofia.manshurin.model.ModelBarang;
+import com.sofia.manshurin.utility.NumberTextWatcher;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -27,12 +31,15 @@ public class DataBarangEdit extends AppCompatActivity {
 
     EditText txt_nama_barang, txt_harga_barang, txt_deskripsi_barang;
     ImageButton btn_simpan, btn_hapus;
-    TextView txt_id_barang, txtload;
+    TextView txt_id_barang, txt_jumlah_barang, txtload;
     ModelBarang modelBarang;
     List<ModelBarang> listModelBarang;
     int id, checkNama;
     DataHelper dbCenter;
     String now, namaAwal, namaAkhir;
+    DecimalFormat formatter;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +51,7 @@ public class DataBarangEdit extends AppCompatActivity {
         txt_deskripsi_barang = findViewById(R.id.txt_deskripsi_barang);
         btn_simpan = findViewById(R.id.btn_simpan);
         btn_hapus = findViewById(R.id.btn_hapus);
+        txt_jumlah_barang = findViewById(R.id.txt_jumlah_barang);
         txtload = findViewById(R.id.textloading);
 
         dbCenter = new DataHelper(this);
@@ -54,6 +62,8 @@ public class DataBarangEdit extends AppCompatActivity {
         now = formatter.format(new Date());
 
         start();
+
+        txt_harga_barang.addTextChangedListener(new NumberTextWatcher(txt_harga_barang));
 
         btn_simpan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,8 +147,12 @@ public class DataBarangEdit extends AppCompatActivity {
         namaAwal = txt_nama_barang.getText().toString();
         txt_id_barang.setText(String.valueOf(modelBarang.getId_barang()));
         txt_nama_barang.setText(modelBarang.getNama_barang());
+        txt_jumlah_barang.setText(String.valueOf(modelBarang.getJml_barang()));
         txt_deskripsi_barang.setText(modelBarang.getDesk_barang());
-        txt_harga_barang.setText(modelBarang.getHarga_barang());
+
+        int nom = Integer.valueOf(modelBarang.getHarga_barang());
+        String a = checkDesimal(String.valueOf(nom));
+        txt_harga_barang.setText(a);
     }
 
     private void checkNama(){
@@ -172,7 +186,7 @@ public class DataBarangEdit extends AppCompatActivity {
     private void updateDataBarang(){
         SQLiteDatabase db = dbCenter.getWritableDatabase();
         db.execSQL("update barang set nama_barang='"+txt_nama_barang.getText().toString()+
-                "', harga_barang='"+txt_harga_barang.getText().toString()+
+                "', harga_barang='"+txt_harga_barang.getText().toString().replaceAll("[^0-9]", "")+
                 "', desk_barang='"+txt_deskripsi_barang.getText().toString()+
                 "', tgl_update='"+now+"' " +
                 "where id_barang='"+ modelBarang.getId_barang() +"'");
@@ -188,6 +202,22 @@ public class DataBarangEdit extends AppCompatActivity {
         DataBarang.dataMaster.getDataBarang();
         Home.dataMaster.getDataBarang();
         goToDataBarang();
+    }
+
+    private String checkDesimal(String a){
+
+        formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+        DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance();
+        symbols.setGroupingSeparator('.');
+        symbols.setDecimalSeparator('.');
+        formatter = new DecimalFormat("###,###.##", symbols);
+
+        if(a!=null || !a.equalsIgnoreCase("")){
+            if(a.length()>3){
+                a = formatter.format(Double.valueOf(a));
+            }
+        }
+        return a;
     }
 
     private void goToDataBarang(){

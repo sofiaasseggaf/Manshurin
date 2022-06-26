@@ -32,7 +32,6 @@ public class PembelianRiwayat extends AppCompatActivity {
         setContentView(R.layout.riwayat_pembelian);
 
         rvRiwayatPembelian = findViewById(R.id.rvRiwayatPembelian);
-        rvRiwayatPembelian2 = findViewById(R.id.rvRiwayatPembelian2);
         txtload = findViewById(R.id.textloading);
 
         dbCenter = new DataHelper(this);

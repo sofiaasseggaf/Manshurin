@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -40,7 +41,7 @@ public class Penjualan extends AppCompatActivity {
 
     EditText txt_jml_barang, txt_harga_jual;
     Spinner sp_barang;
-    TextView txt_total_biaya, txtload;
+    TextView txt_total_biaya, txtload, txt_total_barang, txt_alert;
     ImageButton btn_masukkan_keranjang, btn_cek_keranjang;
     DataHelper dbCenter;
     List<ModelBarang> listModelBarang;
@@ -54,7 +55,7 @@ public class Penjualan extends AppCompatActivity {
     ModelBarang modelBarang;
     List<ModelPenjualan> listModelPenjualan;
     Random rand;
-    int upperbound, id_penjualan, id_riwayat, hrg, jml, total;
+    int upperbound, id_penjualan, id_riwayat, hrg, jml, total, jml_total_barang;
     DecimalFormat formatter;
 
     @Override
@@ -68,6 +69,8 @@ public class Penjualan extends AppCompatActivity {
         txt_total_biaya = findViewById(R.id.txt_total_biaya);
         btn_masukkan_keranjang = findViewById(R.id.btn_masukkan_keranjang);
         btn_cek_keranjang = findViewById(R.id.btn_cek_keranjang);
+        txt_total_barang = findViewById(R.id.txt_total_barang);
+        txt_alert = findViewById(R.id.txt_alert);
         txtload = findViewById(R.id.textloading);
 
         dbCenter = new DataHelper(this);
@@ -94,6 +97,13 @@ public class Penjualan extends AppCompatActivity {
                             !txt_harga_jual.getText().toString().equalsIgnoreCase("")){
                         hrg = Integer.valueOf(txt_harga_jual.getText().toString().replaceAll("[^0-9]", ""));
                         jml = Integer.valueOf(txt_jml_barang.getText().toString());
+                        if (jml>jml_total_barang){
+                            txt_jml_barang.setTextColor(Color.parseColor("#FF0000"));
+                            txt_alert.setVisibility(View.VISIBLE);
+                        } else {
+                            txt_jml_barang.setTextColor(Color.parseColor("#000000"));
+                            txt_alert.setVisibility(View.GONE);
+                        }
                     }
                 }catch (Exception e){}
             }
@@ -119,6 +129,8 @@ public class Penjualan extends AppCompatActivity {
                                 id = listModelBarang.get(a).getId_barang();
                                 harga = listModelBarang.get(a).getHarga_barang();
                                 modelBarang = listModelBarang.get(a);
+                                jml_total_barang = listModelBarang.get(a).getJml_barang();
+                                txt_total_barang.setText("Total Barang : "+String.valueOf(jml_total_barang));
                             }
                         } catch (Exception e){}
                     }

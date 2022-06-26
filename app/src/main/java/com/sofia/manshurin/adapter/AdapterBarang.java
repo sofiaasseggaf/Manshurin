@@ -12,11 +12,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.sofia.manshurin.R;
 import com.sofia.manshurin.model.ModelBarang;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class AdapterBarang extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     List<ModelBarang> dataItemList;
+    DecimalFormat formatter;
 
     public AdapterBarang(List<ModelBarang> dataItemList) {
         this.dataItemList = dataItemList;
@@ -33,8 +38,12 @@ public class AdapterBarang extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ((Penampung)holder).nama_barang.setText(dataItemList.get(position).getNama_barang());
-        ((Penampung)holder).harga_barang.setText("Harga : " + dataItemList.get(position).getHarga_barang());
         ((Penampung)holder).stok_barang.setText("Jumlah : " + dataItemList.get(position).getJml_barang());
+
+        int harga = Integer.valueOf(dataItemList.get(position).getHarga_barang());
+        String a = checkDesimal(String.valueOf(harga));
+        ((Penampung)holder).harga_barang.setText("Harga : " + a);
+
     }
 
     @Override
@@ -54,6 +63,22 @@ public class AdapterBarang extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         public void onClick(View v) {
             Log.d("onclick", "onClick " + getLayoutPosition() + " " + nama_barang.getText());
         }
+    }
+
+    private String checkDesimal(String a){
+
+        formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+        DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance();
+        symbols.setGroupingSeparator('.');
+        symbols.setDecimalSeparator('.');
+        formatter = new DecimalFormat("###,###.##", symbols);
+
+        if(a!=null || !a.equalsIgnoreCase("")){
+            if(a.length()>3){
+                a = formatter.format(Double.valueOf(a));
+            }
+        }
+        return a;
     }
 
 }

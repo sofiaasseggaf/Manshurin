@@ -13,11 +13,16 @@ import com.sofia.manshurin.R;
 import com.sofia.manshurin.model.ModelBarang;
 import com.sofia.manshurin.model.ModelSaldo;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class AdapterSaldo extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     List<ModelSaldo> dataItemList;
+    DecimalFormat formatter;
 
     public AdapterSaldo(List<ModelSaldo> dataItemList) {
         this.dataItemList = dataItemList;
@@ -34,8 +39,12 @@ public class AdapterSaldo extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ((Penampung)holder).nama_saldo.setText(dataItemList.get(position).getNama_saldo());
-        ((Penampung)holder).nominal_saldo.setText(dataItemList.get(position).getNominal_saldo());
         ((Penampung)holder).deskripsi_saldo.setText(dataItemList.get(position).getDesk_saldo());
+
+        int nom = Integer.valueOf(dataItemList.get(position).getNominal_saldo());
+        String a = checkDesimal(String.valueOf(nom));
+        ((Penampung)holder).nominal_saldo.setText(a);
+
     }
 
     @Override
@@ -55,6 +64,22 @@ public class AdapterSaldo extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         public void onClick(View v) {
             Log.d("onclick", "onClick " + getLayoutPosition() + " " + nama_saldo.getText());
         }
+    }
+
+    private String checkDesimal(String a){
+
+        formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+        DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance();
+        symbols.setGroupingSeparator('.');
+        symbols.setDecimalSeparator('.');
+        formatter = new DecimalFormat("###,###.##", symbols);
+
+        if(a!=null || !a.equalsIgnoreCase("")){
+            if(a.length()>3){
+                a = formatter.format(Double.valueOf(a));
+            }
+        }
+        return a;
     }
 
 }

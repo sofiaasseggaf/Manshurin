@@ -51,11 +51,21 @@
             android:layout_marginTop="5dp"/>
 
         <TextView
+            android:id="@+id/txt_total_barang"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat_bold"
             android:textSize="14sp"
-            android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:text="Total Barang : "/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_bold"
+            android:textSize="14sp"
+            android:layout_marginTop="15dp"
             android:text="Harga Jual"/>
 
         <EditText
@@ -68,7 +78,7 @@
             android:textSize="14sp"
             android:textColor="@color/black"
             android:inputType="number"
-            android:layout_marginTop="5dp"/>
+            android:layout_marginTop="10dp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -88,7 +98,19 @@
             android:inputType="number"
             android:fontFamily="@font/montserrat_bold"
             android:textSize="14sp"
-            android:layout_marginTop="5dp"/>
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:id="@+id/txt_alert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_bold"
+            android:textSize="12sp"
+            android:textColor="#ff0000"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="5dp"
+            android:visibility="gone"
+            android:text="Jumlah Barang Melebihi Stok Barang yang Ada !"/>
 
         <TextView
             android:id="@+id/txt_total_biaya"

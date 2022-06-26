@@ -1,20 +1,25 @@
 package com.sofia.manshurin.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.sofia.manshurin.PenjualanRiwayat;
+import com.sofia.manshurin.PenjualanRiwayatDetail;
 import com.sofia.manshurin.R;
 import com.sofia.manshurin.model.ModelBarang;
 import com.sofia.manshurin.model.ModelPenjualan;
 import com.sofia.manshurin.model.ModelRiwayatPenjualan;
+import com.sofia.manshurin.utility.RecyclerItemClickListener;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -29,6 +34,7 @@ public class AdapterRiwayatPenjualan extends RecyclerView.Adapter<RecyclerView.V
     List<ModelPenjualan> dataPenjualan;
     List<ModelPenjualan> dataPenjualan2 = new ArrayList<ModelPenjualan>();
     List<ModelBarang> dataBarang = new ArrayList<ModelBarang>();
+    List<ModelBarang> dataBarang2 = new ArrayList<ModelBarang>();
     Context context;
     DecimalFormat formatter;
 
@@ -49,6 +55,11 @@ public class AdapterRiwayatPenjualan extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+
+        dataPenjualan2.clear();
+        dataBarang2.clear();
+
+
         ((Penampung)holder).tgl_pembelian.setText(dataItemList.get(position).getTgl_input());
 
         int total = Integer.valueOf(dataItemList.get(position).getHarga());
@@ -61,7 +72,16 @@ public class AdapterRiwayatPenjualan extends RecyclerView.Adapter<RecyclerView.V
                 dataPenjualan2.add(dataPenjualan.get(i));
             }
         }
-        AdapterRiwayatPenjualanList itemList = new AdapterRiwayatPenjualanList(dataPenjualan2, dataBarang);
+        if (dataBarang.size()>0){
+            for(int i=0; i<dataPenjualan2.size(); i++){
+                for (int j=0; j<dataBarang.size(); j++){
+                    if (dataPenjualan2.get(i).getId_barang() == dataBarang.get(j).getId_barang()) {
+                        dataBarang2.add(dataBarang.get(j));
+                    }
+                }
+            }
+        }
+        AdapterRiwayatPenjualanList itemList = new AdapterRiwayatPenjualanList(dataPenjualan2, dataBarang2);
         ((Penampung)holder).rv_list_riwayat.setLayoutManager(new LinearLayoutManager(context));
         ((Penampung)holder).rv_list_riwayat.setAdapter(itemList);
     }

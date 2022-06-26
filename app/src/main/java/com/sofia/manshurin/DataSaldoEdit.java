@@ -18,7 +18,11 @@ import android.widget.Toast;
 import com.sofia.manshurin.helper.DataHelper;
 import com.sofia.manshurin.model.ModelBarang;
 import com.sofia.manshurin.model.ModelSaldo;
+import com.sofia.manshurin.utility.NumberTextWatcher;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -34,6 +38,8 @@ public class DataSaldoEdit extends AppCompatActivity {
     int id, checkNama;
     DataHelper dbCenter;
     String now, namaAwal, namaAkhir;
+    DecimalFormat formatter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +65,7 @@ public class DataSaldoEdit extends AppCompatActivity {
 
         start();
 
+        txt_nominal_saldo.addTextChangedListener(new NumberTextWatcher(txt_nominal_saldo));
 
         btn_simpan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,8 +150,12 @@ public class DataSaldoEdit extends AppCompatActivity {
         txt_id_saldo.setText(String.valueOf(modelSaldo.getId_saldo()));
         txt_jenis_saldo.setText(modelSaldo.getJenis_saldo());
         txt_nama_saldo.setText(modelSaldo.getNama_saldo());
-        txt_nominal_saldo.setText(modelSaldo.getNominal_saldo());
         txt_deskripsi_saldo.setText(modelSaldo.getDesk_saldo());
+
+        int nom = Integer.valueOf(modelSaldo.getNominal_saldo());
+        String a = checkDesimal(String.valueOf(nom));
+        txt_nominal_saldo.setText(a);
+
     }
 
     private void checkNama(){
@@ -179,7 +190,7 @@ public class DataSaldoEdit extends AppCompatActivity {
         SQLiteDatabase db = dbCenter.getWritableDatabase();
         db.execSQL("update saldo set nama_saldo='"+txt_nama_saldo.getText().toString()+
                 "', jenis_saldo='"+txt_jenis_saldo.getText().toString()+
-                "', nominal_saldo='"+txt_nominal_saldo.getText().toString()+
+                "', nominal_saldo='"+txt_nominal_saldo.getText().toString().replaceAll("[^0-9]", "")+
                 "', desk_saldo='"+txt_deskripsi_saldo.getText().toString()+
                 "', tgl_update='"+now+"' " +
                 "where id_saldo='"+ modelSaldo.getId_saldo() +"'");
@@ -193,6 +204,22 @@ public class DataSaldoEdit extends AppCompatActivity {
         db.execSQL("delete from saldo where id_saldo = '"+modelSaldo.getId_saldo()+"'");
         DataSaldo.dataMaster.getDataSaldo();
         goToDataSaldo();
+    }
+
+    private String checkDesimal(String a){
+
+        formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+        DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance();
+        symbols.setGroupingSeparator('.');
+        symbols.setDecimalSeparator('.');
+        formatter = new DecimalFormat("###,###.##", symbols);
+
+        if(a!=null || !a.equalsIgnoreCase("")){
+            if(a.length()>3){
+                a = formatter.format(Double.valueOf(a));
+            }
+        }
+        return a;
     }
 
     private void goToDataSaldo(){
