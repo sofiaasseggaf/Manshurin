@@ -50,6 +50,16 @@
             android:background="@drawable/rect_spinner"
             android:layout_marginTop="10dp"/>
 
+        <TextView
+            android:id="@+id/txt_total_barang"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_bold"
+            android:textSize="14sp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:text="Total Barang : "/>
+
         <LinearLayout
             android:id="@+id/ll_barang_baru"
             android:layout_width="match_parent"
@@ -83,11 +93,11 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat_bold"
             android:textSize="14sp"
-            android:layout_marginTop="12dp"
-            android:text="Jumlah Barang"/>
+            android:layout_marginTop="15dp"
+            android:text="Harga Beli"/>
 
         <EditText
-            android:id="@+id/txt_jml_barang"
+            android:id="@+id/txt_harga_beli"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/rect_edittext"
@@ -101,11 +111,11 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat_bold"
             android:textSize="14sp"
-            android:layout_marginTop="12dp"
-            android:text="Harga Beli"/>
+            android:layout_marginTop="10dp"
+            android:text="Jumlah Barang"/>
 
         <EditText
-            android:id="@+id/txt_harga_beli"
+            android:id="@+id/txt_jml_barang"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/rect_edittext"
@@ -114,7 +124,20 @@
             android:textSize="14sp"
             android:layout_marginTop="10dp"/>
 
-        <RelativeLayout
+        <TextView
+            android:id="@+id/txt_alert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_bold"
+            android:textSize="12sp"
+            android:textColor="#ff0000"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="5dp"
+            android:visibility="gone"
+            android:text="Jumlah Barang Melebihi Stok Barang yang Ada !"/>
+
+
+        <!--<RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -167,16 +190,16 @@
                     android:layout_marginTop="10dp"/>
             </LinearLayout>
 
-        </RelativeLayout>
+        </RelativeLayout>-->
 
         <TextView
             android:id="@+id/txt_total_biaya"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/montserrat_bold"
-            android:textSize="20sp"
+            android:textSize="24sp"
             android:layout_marginTop="25dp"
-            android:text="TOTAL BIAYA : " />
+            android:text="Total Biaya: " />
 
     </LinearLayout>
 

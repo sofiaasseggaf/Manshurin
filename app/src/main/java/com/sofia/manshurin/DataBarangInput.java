@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.sofia.manshurin.helper.DataHelper;
 import com.sofia.manshurin.model.ModelBarang;
+import com.sofia.manshurin.utility.NumberTextWatcher;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,7 +27,7 @@ import java.util.Random;
 
 public class DataBarangInput extends AppCompatActivity {
 
-    EditText txt_nama_barang, txt_harga_barang, txt_deskripsi_barang;
+    EditText txt_nama_barang, txt_harga_barang, txt_deskripsi_barang, txt_jml_barang;
     ImageButton btn_simpan;
     TextView txtload, txt_id_barang;
     DataHelper dbCenter;
@@ -45,6 +46,7 @@ public class DataBarangInput extends AppCompatActivity {
         txt_nama_barang = findViewById(R.id.txt_nama_barang);
         txt_harga_barang = findViewById(R.id.txt_harga_barang);
         txt_deskripsi_barang = findViewById(R.id.txt_deskripsi_barang);
+        txt_jml_barang = findViewById(R.id.txt_jml_barang);
         btn_simpan = findViewById(R.id.btn_simpan);
         txtload = findViewById(R.id.textloading);
 
@@ -58,11 +60,14 @@ public class DataBarangInput extends AppCompatActivity {
 
         start();
 
+        txt_harga_barang.addTextChangedListener(new NumberTextWatcher(txt_harga_barang));
+
         btn_simpan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!txt_id_barang.getText().toString().equalsIgnoreCase("") && !txt_nama_barang.getText().toString().equalsIgnoreCase("") &&
-                        !txt_harga_barang.getText().toString().equalsIgnoreCase("") && !txt_deskripsi_barang.getText().toString().equalsIgnoreCase("")){
+                        !txt_harga_barang.getText().toString().equalsIgnoreCase("") && !txt_deskripsi_barang.getText().toString().equalsIgnoreCase("") &&
+                        !txt_jml_barang.getText().toString().equalsIgnoreCase("")){
                     checkid();
                 } else {
                     Toast.makeText(DataBarangInput.this, "Lengkapi Field Terlebih Dahulu", Toast.LENGTH_SHORT).show();
@@ -174,8 +179,8 @@ public class DataBarangInput extends AppCompatActivity {
         db.execSQL("insert into barang(id_barang, nama_barang, harga_barang, jml_barang, desk_barang, tgl_input, tgl_update) values('" +
                 txt_id_barang.getText() + "','" +
                 txt_nama_barang.getText().toString() + "','" +
-                txt_harga_barang.getText().toString() + "','" +
-                "0" + "','" +
+                txt_harga_barang.getText().toString().replaceAll("[^0-9]", "") + "','" +
+                txt_jml_barang.getText() + "','" +
                 txt_deskripsi_barang.getText().toString() + "','" +
                 now + "','" +
                 now + "')");

@@ -9,7 +9,9 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import com.sofia.manshurin.model.ModelBarang;
 import com.sofia.manshurin.model.ModelKranjang;
+import com.sofia.manshurin.model.ModelPembelian;
 import com.sofia.manshurin.model.ModelPenjualan;
+import com.sofia.manshurin.model.ModelRiwayatPembelian;
 import com.sofia.manshurin.model.ModelRiwayatPenjualan;
 import com.sofia.manshurin.model.ModelSaldo;
 import com.sofia.manshurin.model.ModelUser;
@@ -19,7 +21,7 @@ import java.util.List;
 
 public class DataHelper extends SQLiteOpenHelper {
 
-    private  static final String DATABASE_NAME = "manshurin2.db";
+    private  static final String DATABASE_NAME = "manshur.db";
     private static final int DATABASE_VERSION = 1;
 
     public DataHelper(@Nullable Context context) {
@@ -222,6 +224,29 @@ public class DataHelper extends SQLiteOpenHelper {
         return modelPenjualanList;
     }
 
+    public List<ModelPembelian> getAllPembelian() {
+        List<ModelPembelian> modelPembelianList = new ArrayList<ModelPembelian>();
+        // Select All Query
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT  * FROM pembelian", null);
+        cursor.moveToFirst();
+        // Looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                ModelPembelian pembelianModel = new ModelPembelian(
+                        cursor.getInt(0),
+                        cursor.getInt(1),
+                        cursor.getInt(2),
+                        cursor.getInt(3),
+                        cursor.getString(4));
+                modelPembelianList.add(pembelianModel);
+            } while (cursor.moveToNext());
+        }
+
+        // return student list
+        return modelPembelianList;
+    }
+
     public List<ModelKranjang> getAllKranjang(){
         // kranjang(idtransaksi integer primary key, idkranjang integer null);";
         List<ModelKranjang> modelKranjangList = new ArrayList<>();
@@ -292,7 +317,54 @@ public class DataHelper extends SQLiteOpenHelper {
     }
 
 
+    public List<ModelRiwayatPembelian> getAllRiwayatPembelian(){
+        // riwayatpenjualan(id_riwayat integer null, harga text null,
+        // harga_katul text null, jenis_pembayaran text null, tgl_input text null, tgl_update text null);";
 
+        List<ModelRiwayatPembelian> modelRiwayatPembelianList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM riwayatpembelian", null);
+        cursor.moveToFirst();
+        if (cursor.moveToFirst()) {
+            do {
+                ModelRiwayatPembelian riwayatPembelianModel = new ModelRiwayatPembelian(
+                        cursor.getInt(0),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.getString(5));
+                modelRiwayatPembelianList.add(riwayatPembelianModel);
+            } while (cursor.moveToNext());
+        }
+
+        return modelRiwayatPembelianList;
+    }
+    //get riwayat pembelian with id
+    public ModelRiwayatPembelian getRiwayatPembelian(int id_riwayat_pembelian) {
+
+        // riwayatpenjualan(id_riwayat integer null, harga text null,
+        // harga_katul text null, jenis_pembayaran text null, tgl_input text null, tgl_update text null);";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM riwayatpembelian WHERE id_riwayat = '" + id_riwayat_pembelian + "'", null);
+        String[] rpembelian = new String[cursor.getCount()];
+        cursor.moveToFirst();
+        for (int cc=0; cc < cursor.getCount(); cc++) {
+            cursor.moveToPosition(cc);
+            rpembelian[cc] = cursor.getString(0).toString();
+        }
+        ModelRiwayatPembelian rpembelianLogged = new ModelRiwayatPembelian(
+                cursor.getInt(0),
+                cursor.getString(1),
+                cursor.getString(2),
+                cursor.getString(3),
+                cursor.getString(4),
+                cursor.getString(5));
+
+        //Return Riwayat Penjualan
+        return rpembelianLogged;
+    }
 
 
     /*public List<BarangModel> getAllBarangFilter(String itemDecs) {

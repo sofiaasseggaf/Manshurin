@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sofia.manshurin.R;
 import com.sofia.manshurin.model.ModelBarang;
+import com.sofia.manshurin.model.ModelPembelian;
 import com.sofia.manshurin.model.ModelPenjualan;
 
 import java.text.DecimalFormat;
@@ -19,13 +20,13 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
-public class AdapterKeranjangPenjualan extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class AdapterKeranjangPembelian extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    List<ModelPenjualan> dataItemList;
+    List<ModelPembelian> dataItemList;
     List<ModelBarang> dataBarang;
     DecimalFormat formatter;
 
-    public AdapterKeranjangPenjualan(List<ModelPenjualan> dataItemList, List<ModelBarang> dataBarang) {
+    public AdapterKeranjangPembelian(List<ModelPembelian> dataItemList, List<ModelBarang> dataBarang) {
         this.dataItemList = dataItemList;
         this.dataBarang = dataBarang;
     }
@@ -41,10 +42,10 @@ public class AdapterKeranjangPenjualan extends RecyclerView.Adapter<RecyclerView
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ((Penampung)holder).txt_nama_barang.setText(dataBarang.get(position).getNama_barang());
-        ((Penampung)holder).txt_jml_jual.setText(String.valueOf(dataItemList.get(position).getJumlah()));
+        ((Penampung)holder).txt_jml_beli.setText(String.valueOf(dataItemList.get(position).getJumlah()));
         //int total = Integer.valueOf(dataItemList.get(position).getHarga()) * dataItemList.get(position).getJumlah();
         String a = checkDesimal(String.valueOf(dataItemList.get(position).getJumlah()));
-        ((Penampung)holder).txt_total_harga_jual.setText(a);
+        ((Penampung)holder).txt_total_harga_beli.setText(a);
     }
 
     @Override
@@ -53,12 +54,12 @@ public class AdapterKeranjangPenjualan extends RecyclerView.Adapter<RecyclerView
     }
 
     static class Penampung extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView txt_nama_barang, txt_jml_jual, txt_total_harga_jual;
+        public TextView txt_nama_barang, txt_jml_beli, txt_total_harga_beli;
         public Penampung(View itemView) {
             super(itemView);
             txt_nama_barang = itemView.findViewById(R.id.txt_nama_barang);
-            txt_jml_jual = itemView.findViewById(R.id.txt_jml_jual);
-            txt_total_harga_jual = itemView.findViewById(R.id.txt_total_harga_jual);
+            txt_jml_beli = itemView.findViewById(R.id.txt_jml_jual);
+            txt_total_harga_beli = itemView.findViewById(R.id.txt_total_harga_jual);
         }
         @Override
         public void onClick(View v) {

@@ -103,7 +103,19 @@
             android:layout_marginTop="12dp"
             android:text="Jumlah Barang"/>
 
-        <LinearLayout
+        <EditText
+            android:id="@+id/txt_jumlah_barang"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rect_edittext"
+            android:textColor="@color/black"
+            android:inputType="number"
+            android:paddingLeft="10dp"
+            android:fontFamily="@font/montserrat_bold"
+            android:textSize="14sp"
+            android:layout_marginTop="10dp"/>
+
+        <!--<LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/rect_edittext_noneditable"
@@ -117,7 +129,7 @@
                 android:fontFamily="@font/montserrat_bold"
                 android:textSize="14sp"
                 android:layout_height="wrap_content" />
-        </LinearLayout>
+        </LinearLayout>-->
 
         <TextView
             android:layout_width="wrap_content"

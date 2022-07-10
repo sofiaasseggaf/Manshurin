@@ -51,6 +51,9 @@ public class PenjualanRiwayat extends AppCompatActivity {
 
     private void getDataRiwayatPenjualan(){
         listModelRiwayat = dbCenter.getAllRiwayatPenjualan();
+        if (listModelRiwayat==null){
+            Toast.makeText(PenjualanRiwayat.this, "Riwayat Penjualan NULL", Toast.LENGTH_SHORT).show();
+        }
         if(listModelRiwayat.size()>0){
             getDataPenjualan();
         } else {
@@ -60,6 +63,9 @@ public class PenjualanRiwayat extends AppCompatActivity {
 
     private void getDataPenjualan(){
         listModelPenjualan = dbCenter.getAllPenjualan();
+        if (listModelPenjualan==null){
+            Toast.makeText(PenjualanRiwayat.this, "Data Penjualan NULL", Toast.LENGTH_SHORT).show();
+        }
         if(listModelPenjualan.size()>0){
             getDataBarang();
         } else {

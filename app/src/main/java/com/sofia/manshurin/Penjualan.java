@@ -113,7 +113,7 @@ public class Penjualan extends AppCompatActivity {
                 total = hrg*jml;
                 //txt_total_biaya.setText(String.valueOf(total));
                 String a = checkDesimal(String.valueOf(total));
-                txt_total_biaya.setText("Total : " + a);
+                txt_total_biaya.setText("Total Biaya : " + a);
             }
         });
 
@@ -208,8 +208,14 @@ public class Penjualan extends AppCompatActivity {
                 });
             }
         } else {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    findViewById(R.id.framelayout).setVisibility(View.GONE);
+                    Toast.makeText(Penjualan.this, "Anda Belum Memiliki Barang", Toast.LENGTH_SHORT).show();
+                }
+            });
             findViewById(R.id.framelayout).setVisibility(View.GONE);
-            Toast.makeText(Penjualan.this, "Anda Belum Memiliki Barang", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -250,6 +256,7 @@ public class Penjualan extends AppCompatActivity {
 
     private void hapusPenjualandanKeranjang(){
         SQLiteDatabase db = dbCenter.getWritableDatabase();
+        idtrans.clear();
         for(int i=0; i<listModelKeranjang.size(); i++){
             idtrans.add(listModelKeranjang.get(i).getIdtransaksi());
             // kranjang(idtransaksi, idkranjang)

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sofia.manshurin.R;
 import com.sofia.manshurin.model.ModelBarang;
+import com.sofia.manshurin.model.ModelPembelian;
 import com.sofia.manshurin.model.ModelPenjualan;
 
 import java.text.DecimalFormat;
@@ -19,13 +20,13 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
-public class AdapterKeranjangPenjualan extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class AdapterRiwayatPembelianList extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    List<ModelPenjualan> dataItemList;
+    List<ModelPembelian> dataItemList;
     List<ModelBarang> dataBarang;
     DecimalFormat formatter;
 
-    public AdapterKeranjangPenjualan(List<ModelPenjualan> dataItemList, List<ModelBarang> dataBarang) {
+    public AdapterRiwayatPembelianList(List<ModelPembelian> dataItemList, List<ModelBarang> dataBarang) {
         this.dataItemList = dataItemList;
         this.dataBarang = dataBarang;
     }
@@ -33,18 +34,21 @@ public class AdapterKeranjangPenjualan extends RecyclerView.Adapter<RecyclerView
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.z_list_keranjang, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.z_list_riwayat_data, parent, false);
         Penampung penampung = new Penampung(view);
         return penampung;
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ((Penampung)holder).txt_nama_barang.setText(dataBarang.get(position).getNama_barang());
-        ((Penampung)holder).txt_jml_jual.setText(String.valueOf(dataItemList.get(position).getJumlah()));
-        //int total = Integer.valueOf(dataItemList.get(position).getHarga()) * dataItemList.get(position).getJumlah();
-        String a = checkDesimal(String.valueOf(dataItemList.get(position).getJumlah()));
-        ((Penampung)holder).txt_total_harga_jual.setText(a);
+        ((Penampung)holder).nama_barang.setText(dataBarang.get(position).getNama_barang());
+        //((Penampung)holder).nama_barang.setText(String.valueOf(dataItemList.get(position).getId_barang()));
+
+        int total = Integer.valueOf(dataItemList.get(position).getHarga());
+        String a = checkDesimal(String.valueOf(total));
+        ((Penampung)holder).harga_barang.setText(a);
+
+        ((Penampung)holder).jumlah_barang.setText(String.valueOf(dataItemList.get(position).getJumlah()) + " x ");
     }
 
     @Override
@@ -53,16 +57,16 @@ public class AdapterKeranjangPenjualan extends RecyclerView.Adapter<RecyclerView
     }
 
     static class Penampung extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView txt_nama_barang, txt_jml_jual, txt_total_harga_jual;
+        public TextView nama_barang, jumlah_barang, harga_barang;
         public Penampung(View itemView) {
             super(itemView);
-            txt_nama_barang = itemView.findViewById(R.id.txt_nama_barang);
-            txt_jml_jual = itemView.findViewById(R.id.txt_jml_jual);
-            txt_total_harga_jual = itemView.findViewById(R.id.txt_total_harga_jual);
+            nama_barang = itemView.findViewById(R.id.nama_barang);
+            jumlah_barang = itemView.findViewById(R.id.jumlah_barang);
+            harga_barang = itemView.findViewById(R.id.harga_barang);
         }
         @Override
         public void onClick(View v) {
-            Log.d("onclick", "onClick " + getLayoutPosition() + " " + txt_nama_barang.getText());
+            Log.d("onclick", "onClick " + getLayoutPosition() + " " + nama_barang.getText());
         }
     }
 

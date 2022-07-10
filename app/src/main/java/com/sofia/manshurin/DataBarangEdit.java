@@ -29,9 +29,9 @@ import java.util.Locale;
 
 public class DataBarangEdit extends AppCompatActivity {
 
-    EditText txt_nama_barang, txt_harga_barang, txt_deskripsi_barang;
+    EditText txt_nama_barang, txt_harga_barang, txt_deskripsi_barang, txt_jumlah_barang;
     ImageButton btn_simpan, btn_hapus;
-    TextView txt_id_barang, txt_jumlah_barang, txtload;
+    TextView txt_id_barang, txtload;
     ModelBarang modelBarang;
     List<ModelBarang> listModelBarang;
     int id, checkNama;
@@ -69,7 +69,7 @@ public class DataBarangEdit extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!txt_nama_barang.getText().toString().equalsIgnoreCase("") && !txt_harga_barang.getText().toString().equalsIgnoreCase("") &&
-                        !txt_deskripsi_barang.getText().toString().equalsIgnoreCase("")){
+                        !txt_deskripsi_barang.getText().toString().equalsIgnoreCase("") && !txt_jumlah_barang.getText().toString().equalsIgnoreCase("")){
                     checkNama();
                 } else {
                     Toast.makeText(DataBarangEdit.this, "Lengkapi Field Terlebih Dahulu", Toast.LENGTH_SHORT).show();
@@ -150,8 +150,8 @@ public class DataBarangEdit extends AppCompatActivity {
         txt_jumlah_barang.setText(String.valueOf(modelBarang.getJml_barang()));
         txt_deskripsi_barang.setText(modelBarang.getDesk_barang());
 
-        int nom = Integer.valueOf(modelBarang.getHarga_barang());
-        String a = checkDesimal(String.valueOf(nom));
+        //int nom = Integer.valueOf(modelBarang.getHarga_barang());
+        String a = checkDesimal(modelBarang.getHarga_barang());
         txt_harga_barang.setText(a);
     }
 
@@ -187,6 +187,7 @@ public class DataBarangEdit extends AppCompatActivity {
         SQLiteDatabase db = dbCenter.getWritableDatabase();
         db.execSQL("update barang set nama_barang='"+txt_nama_barang.getText().toString()+
                 "', harga_barang='"+txt_harga_barang.getText().toString().replaceAll("[^0-9]", "")+
+                "', jml_barang='"+txt_jumlah_barang.getText()+
                 "', desk_barang='"+txt_deskripsi_barang.getText().toString()+
                 "', tgl_update='"+now+"' " +
                 "where id_barang='"+ modelBarang.getId_barang() +"'");

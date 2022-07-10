@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Manshurin">
         <activity
+            android:name=".PembelianRiwayatDetail"
+            android:exported="false" />
+        <activity
             android:name=".PenjualanRiwayatDetail"
             android:exported="false" />
         <activity

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -15,11 +16,17 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.sofia.manshurin.adapter.AdapterBarangHome;
+import com.sofia.manshurin.adapter.AdapterSaldo;
 import com.sofia.manshurin.helper.DataHelper;
 import com.sofia.manshurin.model.ModelBarang;
+import com.sofia.manshurin.model.ModelSaldo;
 import com.sofia.manshurin.utility.RecyclerItemClickListener;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class Home extends AppCompatActivity {
 
@@ -29,7 +36,10 @@ public class Home extends AppCompatActivity {
     DataHelper dbCenter;
     public static Home dataMaster;
     List<ModelBarang> listModelBarang;
+    List<ModelSaldo> listModelSaldo;
     AdapterBarangHome itemList;
+    int total;
+    DecimalFormat formatter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +61,8 @@ public class Home extends AppCompatActivity {
         dataMaster = this;
         dbCenter = new DataHelper(this);
 
-        start();
+        getDataBarang();
+        //start();
 
         btn_barang.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,7 +119,7 @@ public class Home extends AppCompatActivity {
         });
     }
 
-    private void start(){
+    /*private void start(){
         findViewById(R.id.framelayout).setVisibility(View.VISIBLE);
         final Handler handler = new Handler();
         Runnable runnable = new Runnable() {
@@ -134,25 +145,55 @@ public class Home extends AppCompatActivity {
                 getDataBarang();
             }
         }).start();
-    }
+    }*/
 
     public void getDataBarang(){
         Log.d("DataBarang", "get all barang");
         listModelBarang = dbCenter.getAllBarang();
-        if (listModelBarang!=null){
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    findViewById(R.id.framelayout).setVisibility(View.GONE);
-                    setData();
-                }
-            });
-        } else {
-            findViewById(R.id.framelayout).setVisibility(View.GONE);
+        getDataSaldo();
+    }
+
+    public void getDataSaldo(){
+        /*SQLiteDatabase db = dbCenter.getWritableDatabase();
+        listModelSaldo = dbCenter.getAllSaldo();
+        for (int i=0; i<listModelSaldo.size(); i++){
+            if(listModelSaldo.get(i).getNominal_saldo().equalsIgnoreCase("Pinjaman")){
+                db.execSQL("delete from saldo where id_saldo = '"+listModelSaldo.get(i).getId_saldo()+"'");
+            }
+        }*/
+        Log.d("DataSaldo", "get all saldo");
+        listModelSaldo = dbCenter.getAllSaldo();
+        if (listModelSaldo!=null){
+            total = 0;
+            for (int i=0; i<listModelSaldo.size(); i++){
+                int a = Integer.valueOf(listModelSaldo.get(i).getNominal_saldo());
+                total = total+a;
+            }
+            setDataSaldo();
         }
     }
 
-    private void setData(){
+    private void setDataSaldo(){
+        String a = checkDesimal(String.valueOf(total));
+        txt_total_saldo.setText("Total Saldo = "+ a);
+        if (listModelBarang!=null){
+            setDataBarang();
+        }
+        /*runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                findViewById(R.id.framelayout).setVisibility(View.GONE);
+                String a = checkDesimal(String.valueOf(total));
+                txt_total_saldo.setText("Total Saldo = "+ a);
+                if (listModelBarang!=null){
+                    setDataBarang();
+                }
+
+            }
+        });*/
+    }
+
+    private void setDataBarang(){
         itemList = new AdapterBarangHome(listModelBarang);
         rv_home.setLayoutManager(new LinearLayoutManager(Home.this));
         rv_home.setAdapter(itemList);
@@ -170,6 +211,22 @@ public class Home extends AppCompatActivity {
 
                     }
                 }));
+    }
+
+    private String checkDesimal(String a){
+
+        formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+        DecimalFormatSymbols symbols = DecimalFormatSymbols.getInstance();
+        symbols.setGroupingSeparator('.');
+        symbols.setDecimalSeparator('.');
+        formatter = new DecimalFormat("###,###.##", symbols);
+
+        if(a!=null || !a.equalsIgnoreCase("")){
+            if(a.length()>3){
+                a = formatter.format(Double.valueOf(a));
+            }
+        }
+        return a;
     }
 
     @Override

@@ -39,11 +39,11 @@ public class AdapterSaldo extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ((Penampung)holder).nama_saldo.setText(dataItemList.get(position).getNama_saldo());
-        ((Penampung)holder).deskripsi_saldo.setText(dataItemList.get(position).getDesk_saldo());
+        ((Penampung)holder).deskripsi_saldo.setText("Deskripsi Saldo : "+dataItemList.get(position).getDesk_saldo());
 
         int nom = Integer.valueOf(dataItemList.get(position).getNominal_saldo());
         String a = checkDesimal(String.valueOf(nom));
-        ((Penampung)holder).nominal_saldo.setText(a);
+        ((Penampung)holder).nominal_saldo.setText("Nominal Saldo : "+a);
 
     }
 

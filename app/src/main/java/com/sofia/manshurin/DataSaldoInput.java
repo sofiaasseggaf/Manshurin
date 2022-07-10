@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.sofia.manshurin.helper.DataHelper;
 import com.sofia.manshurin.model.ModelBarang;
 import com.sofia.manshurin.model.ModelSaldo;
+import com.sofia.manshurin.utility.NumberTextWatcher;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -60,6 +61,8 @@ public class DataSaldoInput extends AppCompatActivity {
         id_random = rand.nextInt(upperbound);
 
         start();
+
+        txt_nominal_saldo.addTextChangedListener(new NumberTextWatcher(txt_nominal_saldo));
 
         btn_simpan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,7 +182,7 @@ public class DataSaldoInput extends AppCompatActivity {
                 txt_id_saldo.getText() + "','" +
                 txt_nama_saldo.getText().toString() + "','" +
                 txt_jenis_saldo.getText().toString() + "','" +
-                txt_nominal_saldo.getText().toString() + "','" +
+                txt_nominal_saldo.getText().toString().replaceAll("[^0-9]", "") + "','" +
                 txt_deskripsi_saldo.getText().toString() + "','" +
                 now + "','" +
                 now + "')");
