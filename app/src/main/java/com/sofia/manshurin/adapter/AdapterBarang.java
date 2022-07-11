@@ -38,7 +38,8 @@ public class AdapterBarang extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         ((Penampung)holder).nama_barang.setText(dataItemList.get(position).getNama_barang());
-        ((Penampung)holder).stok_barang.setText("Jumlah : " + dataItemList.get(position).getJml_barang());
+        ((Penampung)holder).stok_barang.setText("Active : " + dataItemList.get(position).getActive());
+        //((Penampung)holder).stok_barang.setText("Jumlah : " + dataItemList.get(position).getJml_barang());
 
         //int harga = Integer.valueOf(dataItemList.get(position).getHarga_barang());
         //String a = checkDesimal(String.valueOf(harga));

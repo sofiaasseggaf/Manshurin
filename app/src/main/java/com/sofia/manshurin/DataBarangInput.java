@@ -176,14 +176,15 @@ public class DataBarangInput extends AppCompatActivity {
 
     private void simpanDataBarang(){
         SQLiteDatabase db = dbCenter.getWritableDatabase();
-        db.execSQL("insert into barang(id_barang, nama_barang, harga_barang, jml_barang, desk_barang, tgl_input, tgl_update) values('" +
+        db.execSQL("insert into barang(id_barang, nama_barang, harga_barang, jml_barang, desk_barang, tgl_input, tgl_update, active) values('" +
                 txt_id_barang.getText() + "','" +
                 txt_nama_barang.getText().toString() + "','" +
                 txt_harga_barang.getText().toString().replaceAll("[^0-9]", "") + "','" +
                 txt_jml_barang.getText() + "','" +
                 txt_deskripsi_barang.getText().toString() + "','" +
                 now + "','" +
-                now + "')");
+                now + "','" +
+                1 + "')");
         Toast.makeText(getApplicationContext(), "Berhasil Tambah Barang", Toast.LENGTH_SHORT).show();
         DataBarang.dataMaster.getDataBarang();
         Home.dataMaster.getDataBarang();

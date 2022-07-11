@@ -25,6 +25,7 @@ import com.sofia.manshurin.utility.RecyclerItemClickListener;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -36,6 +37,7 @@ public class Home extends AppCompatActivity {
     DataHelper dbCenter;
     public static Home dataMaster;
     List<ModelBarang> listModelBarang;
+    List<ModelBarang> listModelBarang2 = new ArrayList<>();
     List<ModelSaldo> listModelSaldo;
     AdapterBarangHome itemList;
     int total;
@@ -177,7 +179,14 @@ public class Home extends AppCompatActivity {
         String a = checkDesimal(String.valueOf(total));
         txt_total_saldo.setText("Total Saldo = "+ a);
         if (listModelBarang!=null){
-            setDataBarang();
+            for (int i=0; i<listModelBarang.size(); i++){
+                if (listModelBarang.get(i).getActive()==1){
+                    listModelBarang2.add(listModelBarang.get(i));
+                }
+            }
+            if (listModelBarang2.size()>0){
+                setDataBarang();
+            }
         }
         /*runOnUiThread(new Runnable() {
             @Override
@@ -194,7 +203,8 @@ public class Home extends AppCompatActivity {
     }
 
     private void setDataBarang(){
-        itemList = new AdapterBarangHome(listModelBarang);
+
+        itemList = new AdapterBarangHome(listModelBarang2);
         rv_home.setLayoutManager(new LinearLayoutManager(Home.this));
         rv_home.setAdapter(itemList);
         rv_home.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), rv_home,
@@ -202,7 +212,7 @@ public class Home extends AppCompatActivity {
                     @Override
                     public void onItemClick(View view, int position) {
                         Intent a = new Intent(Home.this, DataBarangEdit.class);
-                        a.putExtra("idbarang", listModelBarang.get(position).getId_barang());
+                        a.putExtra("idbarang", listModelBarang2.get(position).getId_barang());
                         startActivity(a);
                     }
 

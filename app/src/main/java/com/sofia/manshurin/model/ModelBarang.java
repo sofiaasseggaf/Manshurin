@@ -2,10 +2,10 @@ package com.sofia.manshurin.model;
 
 public class ModelBarang {
 
-    int id_barang, jml_barang;
+    int id_barang, jml_barang, active;
     String nama_barang, harga_barang, desk_barang, txl_input, txl_update;
 
-    public ModelBarang(int id_barang, String nama_barang, String harga_barang, int jml_barang, String desk_barang, String txl_input, String txl_update) {
+    public ModelBarang(int id_barang, String nama_barang, String harga_barang, int jml_barang, String desk_barang, String txl_input, String txl_update, int active) {
         this.id_barang = id_barang;
         this.jml_barang = jml_barang;
         this.nama_barang = nama_barang;
@@ -13,6 +13,7 @@ public class ModelBarang {
         this.desk_barang = desk_barang;
         this.txl_input = txl_input;
         this.txl_update = txl_update;
+        this.active = active;
     }
 
     public int getId_barang() {
@@ -71,4 +72,11 @@ public class ModelBarang {
         this.txl_update = txl_update;
     }
 
+    public int getActive() {
+        return active;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
+    }
 }

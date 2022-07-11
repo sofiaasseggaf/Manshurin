@@ -21,7 +21,7 @@ import java.util.List;
 
 public class DataHelper extends SQLiteOpenHelper {
 
-    private  static final String DATABASE_NAME = "manshur.db";
+    private  static final String DATABASE_NAME = "manshuriin.db";
     private static final int DATABASE_VERSION = 1;
 
     public DataHelper(@Nullable Context context) {
@@ -37,7 +37,7 @@ public class DataHelper extends SQLiteOpenHelper {
         Log.d("Data", "onCreate : " + CREATE_TABLE_USER);
         db.execSQL(CREATE_TABLE_USER);
 
-        String CREATE_TABLE_BARANG = "create table barang(id_barang integer primary key, nama_barang text null, harga_barang text null, jml_barang integer null, desk_barang text null, tgl_input text null, tgl_update text null);";
+        String CREATE_TABLE_BARANG = "create table barang(id_barang integer primary key, nama_barang text null, harga_barang text null, jml_barang integer null, desk_barang text null, tgl_input text null, tgl_update text null, active integer null);";
         Log.d("Data", "onCreate : " + CREATE_TABLE_BARANG);
         db.execSQL(CREATE_TABLE_BARANG);
 
@@ -68,14 +68,14 @@ public class DataHelper extends SQLiteOpenHelper {
 
         // --------------- INSERT DATA TO TABLE -----------
 
-        String INSERT_INTO_USER = "INSERT INTO user(id_user, username, password) VALUES ('0001', 'Sofia', '1234');";
+       /* String INSERT_INTO_USER = "INSERT INTO user(id_user, username, password) VALUES ('0001', 'Sofia', '1234');";
         db.execSQL(INSERT_INTO_USER);
 
-        String INSERT_INTO_BARANG = "INSERT INTO barang(id_barang, nama_barang, harga_barang, jml_barang, desk_barang, tgl_input, tgl_update) VALUES ('0001', 'Beras ABC', '200.000', '12', 'bla bla', '12/02/2022', '12/02/2022');";
+        String INSERT_INTO_BARANG = "INSERT INTO barang(id_barang, nama_barang, harga_barang, jml_barang, desk_barang, tgl_input, tgl_update, active) VALUES ('0001', 'Beras ABC', '200.000', '12', 'bla bla', '12/02/2022', '12/02/2022', '1');";
         db.execSQL(INSERT_INTO_BARANG);
 
         String INSERT_INTO_SALDO = "INSERT INTO saldo(id_saldo, nama_saldo, jenis_saldo, nominal_saldo, desk_saldo, tgl_input, tgl_update) VALUES ('0001', 'Saldo A', '600.000', 'Pinjaman', 'bla bla', '12/02/2022', '12/02/2022');";
-        db.execSQL(INSERT_INTO_SALDO);
+        db.execSQL(INSERT_INTO_SALDO);*/
 
     }
 
@@ -117,7 +117,8 @@ public class DataHelper extends SQLiteOpenHelper {
                         cursor.getInt(3),
                         cursor.getString(4),
                         cursor.getString(5),
-                        cursor.getString(6));
+                        cursor.getString(6),
+                        cursor.getInt(7));
 
                 modelBarangList.add(barangModel);
             } while (cursor.moveToNext());
@@ -171,7 +172,8 @@ public class DataHelper extends SQLiteOpenHelper {
                 cursor.getInt(3),
                 cursor.getString(4),
                 cursor.getString(5),
-                cursor.getString(6));
+                cursor.getString(6),
+                cursor.getInt(7));
 
         //Return Barang
         return baranglogged;

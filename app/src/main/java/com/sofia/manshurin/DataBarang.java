@@ -20,6 +20,7 @@ import com.sofia.manshurin.helper.DataHelper;
 import com.sofia.manshurin.model.ModelBarang;
 import com.sofia.manshurin.utility.RecyclerItemClickListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DataBarang extends AppCompatActivity {
@@ -30,6 +31,7 @@ public class DataBarang extends AppCompatActivity {
     DataHelper dbCenter;
     public static DataBarang dataMaster;
     List<ModelBarang> listModelBarang;
+    List<ModelBarang> listModelBarang2 = new ArrayList<>();
     AdapterBarang itemList;
 
     @Override
@@ -87,13 +89,29 @@ public class DataBarang extends AppCompatActivity {
         Log.d("DataBarang", "get all barang");
         listModelBarang = dbCenter.getAllBarang();
         if (listModelBarang.size()>0){
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    findViewById(R.id.framelayout).setVisibility(View.GONE);
-                    setData();
+            for (int i=0; i<listModelBarang.size(); i++){
+                if (listModelBarang.get(i).getActive()==1){
+                    listModelBarang2.add(listModelBarang.get(i));
                 }
-            });
+            }
+            if (listModelBarang2.size()>0){
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        findViewById(R.id.framelayout).setVisibility(View.GONE);
+                        setData();
+                    }
+                });
+            } else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        findViewById(R.id.framelayout).setVisibility(View.GONE);
+                        Toast.makeText(dataMaster, "Anda Belum Memiliki Barang", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
         } else {
             runOnUiThread(new Runnable() {
                 @Override
@@ -107,7 +125,7 @@ public class DataBarang extends AppCompatActivity {
     }
 
     private void setData(){
-        itemList = new AdapterBarang(listModelBarang);
+        itemList = new AdapterBarang(listModelBarang2);
         rvDataBarang.setLayoutManager(new LinearLayoutManager(DataBarang.this));
         rvDataBarang.setAdapter(itemList);
         rvDataBarang.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), rvDataBarang,
@@ -115,7 +133,7 @@ public class DataBarang extends AppCompatActivity {
                     @Override
                     public void onItemClick(View view, int position) {
                         Intent a = new Intent(DataBarang.this, DataBarangEdit.class);
-                        a.putExtra("idbarang", listModelBarang.get(position).getId_barang());
+                        a.putExtra("idbarang", listModelBarang2.get(position).getId_barang());
                         startActivity(a);
                     }
 

@@ -59,7 +59,7 @@
                 android:id="@+id/txt_sisa_saldo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="SISA SALDO :"
+                android:text="Sisa Saldo :"
                 android:fontFamily="@font/comfortaa_bold"
                 android:textSize="14sp"
                 android:layout_alignParentRight="true"

@@ -199,9 +199,13 @@ public class DataBarangEdit extends AppCompatActivity {
 
     private void hapusDataBarang(){
         SQLiteDatabase db = dbCenter.getWritableDatabase();
-        db.execSQL("delete from barang where id_barang = '"+modelBarang.getId_barang()+"'");
+        db.execSQL("update barang set active='"+"0"+
+                "', tgl_update='"+now+"' " +
+                "where id_barang='"+ modelBarang.getId_barang() +"'");
+//        db.execSQL("delete from barang where id_barang = '"+modelBarang.getId_barang()+"'");
         DataBarang.dataMaster.getDataBarang();
         Home.dataMaster.getDataBarang();
+        Toast.makeText(this, "Berhasil Hapus Data Barang", Toast.LENGTH_SHORT).show();
         goToDataBarang();
     }
 

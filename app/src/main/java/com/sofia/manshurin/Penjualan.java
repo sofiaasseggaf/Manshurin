@@ -196,7 +196,9 @@ public class Penjualan extends AppCompatActivity {
         listModelBarang = dbCenter.getAllBarang();
         if (listModelBarang.size()>0){
             for (int i=0; i<listModelBarang.size(); i++){
-                namaBarang.add(listModelBarang.get(i).getNama_barang());
+                if(listModelBarang.get(i).getActive()==1){
+                    namaBarang.add(listModelBarang.get(i).getNama_barang());
+                }
             }
             if(namaBarang.size()>0){
                 runOnUiThread(new Runnable() {

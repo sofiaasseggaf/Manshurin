@@ -84,7 +84,9 @@
                 android:paddingLeft="10dp"
                 android:fontFamily="@font/montserrat_bold"
                 android:textSize="14sp"
+                android:textColor="@color/black"
                 android:layout_marginTop="10dp"/>
+
 
         </LinearLayout>
 
@@ -104,6 +106,8 @@
             android:paddingLeft="10dp"
             android:fontFamily="@font/montserrat_bold"
             android:textSize="14sp"
+            android:textColor="@color/black"
+            android:inputType="number"
             android:layout_marginTop="10dp"/>
 
         <TextView
@@ -122,6 +126,8 @@
             android:paddingLeft="10dp"
             android:fontFamily="@font/montserrat_bold"
             android:textSize="14sp"
+            android:textColor="@color/black"
+            android:inputType="number"
             android:layout_marginTop="10dp"/>
 
         <TextView

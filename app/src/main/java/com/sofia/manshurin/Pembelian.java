@@ -88,6 +88,38 @@ public class Pembelian extends AppCompatActivity {
 
         txt_harga_beli.addTextChangedListener(new NumberTextWatcher(txt_harga_beli));
 
+        sp_barang.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1,
+                                       int arg2, long arg3) {
+                barangbaru=0;
+                if (namaBarang.size()>0){
+                    nama = sp_barang.getSelectedItem().toString();
+                    if (nama.equalsIgnoreCase("BARANG BELUM TERDAFTAR")){
+                        barangbaru = 1;
+                        ll_barang_baru.setVisibility(View.VISIBLE);
+                        txt_total_barang.setText("Total Barang : -");
+                    } else {
+                        ll_barang_baru.setVisibility(View.GONE);
+                        barangbaru = 0;
+                        for (int a=0; a<listModelBarang.size(); a++){
+                            try {
+                                if (listModelBarang.get(a).getNama_barang().equalsIgnoreCase(nama)){
+                                    id = listModelBarang.get(a).getId_barang();
+                                    harga = listModelBarang.get(a).getHarga_barang();
+                                    modelBarang = listModelBarang.get(a);
+                                    jml_total_barang = listModelBarang.get(a).getJml_barang();
+                                    txt_total_barang.setText("Total Barang : "+String.valueOf(jml_total_barang));
+                                }
+                            } catch (Exception e){}
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) { }
+        });
+
         txt_jml_barang.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -99,16 +131,26 @@ public class Pembelian extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 try{
-                    if (!txt_jml_barang.getText().toString().equalsIgnoreCase("")&
-                            !txt_harga_beli.getText().toString().equalsIgnoreCase("")){
-                        hrg = Integer.valueOf(txt_harga_beli.getText().toString().replaceAll("[^0-9]", ""));
-                        jml = Integer.valueOf(txt_jml_barang.getText().toString());
-                        if (jml>jml_total_barang){
-                            txt_jml_barang.setTextColor(Color.parseColor("#FF0000"));
-                            txt_alert.setVisibility(View.VISIBLE);
-                        } else {
-                            txt_jml_barang.setTextColor(Color.parseColor("#000000"));
-                            txt_alert.setVisibility(View.GONE);
+                    if (barangbaru==1){
+                        txt_jml_barang.setTextColor(Color.parseColor("#000000"));
+                        txt_alert.setVisibility(View.GONE);
+                        if (!txt_jml_barang.getText().toString().equalsIgnoreCase("")&
+                                !txt_harga_beli.getText().toString().equalsIgnoreCase("")){
+                            hrg = Integer.valueOf(txt_harga_beli.getText().toString().replaceAll("[^0-9]", ""));
+                            jml = Integer.valueOf(txt_jml_barang.getText().toString());
+                        }
+                    } else if(barangbaru==0){
+                        if (!txt_jml_barang.getText().toString().equalsIgnoreCase("")&
+                                !txt_harga_beli.getText().toString().equalsIgnoreCase("")){
+                            hrg = Integer.valueOf(txt_harga_beli.getText().toString().replaceAll("[^0-9]", ""));
+                            jml = Integer.valueOf(txt_jml_barang.getText().toString());
+                            if (jml>jml_total_barang){
+                                txt_jml_barang.setTextColor(Color.parseColor("#FF0000"));
+                                txt_alert.setVisibility(View.VISIBLE);
+                            } else {
+                                txt_jml_barang.setTextColor(Color.parseColor("#000000"));
+                                txt_alert.setVisibility(View.GONE);
+                            }
                         }
                     }
                 }catch (Exception e){}
@@ -121,33 +163,6 @@ public class Pembelian extends AppCompatActivity {
                 String a = checkDesimal(String.valueOf(total));
                 txt_total_biaya.setText("Total Biaya : " + a);
             }
-        });
-
-        sp_barang.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> arg0, View arg1,
-                                       int arg2, long arg3) {
-                barangbaru=0;
-                if (namaBarang.size()>0){
-                    nama = sp_barang.getSelectedItem().toString();
-                    if (nama.equalsIgnoreCase("BARANG BELUM TERDAFTAR")){
-                        barangbaru = 1;
-                        ll_barang_baru.setVisibility(View.VISIBLE);
-                    } else {
-                        for (int a=0; a<listModelBarang.size(); a++){
-                            try {
-                                if (listModelBarang.get(a).getNama_barang().equalsIgnoreCase(nama)){
-                                    id = listModelBarang.get(a).getId_barang();
-                                    harga = listModelBarang.get(a).getHarga_barang();
-                                    modelBarang = listModelBarang.get(a);
-                                }
-                            } catch (Exception e){}
-                        }
-                    }
-                }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) { }
         });
 
         btn_masukkan_keranjang.setOnClickListener(new View.OnClickListener() {
@@ -167,8 +182,7 @@ public class Pembelian extends AppCompatActivity {
         btn_cek_keranjang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //delAllKeranjang();
-                //goToKeranjang();
+                goToKeranjang();
             }
         });
 
@@ -207,7 +221,9 @@ public class Pembelian extends AppCompatActivity {
         listModelBarang = dbCenter.getAllBarang();
         if (listModelBarang.size()>0){
             for (int i=0; i<listModelBarang.size(); i++){
-                namaBarang.add(listModelBarang.get(i).getNama_barang());
+                if (listModelBarang.get(i).getActive()==1){
+                    namaBarang.add(listModelBarang.get(i).getNama_barang());
+                }
             }
             namaBarang.add("BARANG BELUM TERDAFTAR");
             if(namaBarang.size()>0){
@@ -277,14 +293,15 @@ public class Pembelian extends AppCompatActivity {
         String now = formatter.format(new Date());
 
         SQLiteDatabase db = dbCenter.getWritableDatabase();
-        db.execSQL("insert into barang(id_barang, nama_barang, harga_barang, jml_barang, desk_barang, tgl_input, tgl_update) values('" +
+        db.execSQL("insert into barang(id_barang, nama_barang, harga_barang, jml_barang, desk_barang, tgl_input, tgl_update, active) values('" +
                 id + "','" +
                 txt_nama_barang.getText().toString() + "','" +
                 txt_harga_beli.getText().toString().replaceAll("[^0-9]", "") + "','" +
                 txt_jml_barang.getText() + "','" +
                 " " + "','" +
                 now + "','" +
-                now + "')");
+                now + "','" +
+                1 + "')");
         Toast.makeText(getApplicationContext(), "Berhasil Tambah Barang", Toast.LENGTH_SHORT).show();
         inputTransaksi();
     }
